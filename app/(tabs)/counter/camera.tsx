@@ -13,7 +13,7 @@ type DetectedItem = { name: string; category: string; confidence: string; note?:
 
 export default function CameraScreen() {
   const router = useRouter();
-  const { addItems } = useCounterStore();
+  const { addItems, items } = useCounterStore();
   const [state, setState] = useState<CameraState>('viewfinder');
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -147,7 +147,8 @@ export default function CameraScreen() {
       source: (item.source || 'photo') as 'photo' | 'manual',
       confidence: item.confidence as 'high' | 'medium' | 'low',
     })));
-    router.replace('/counter');
+    setDetectedItems([]);
+    setState('viewfinder');
   }
 
   function removeDetectedItem(name: string) {
@@ -252,11 +253,14 @@ export default function CameraScreen() {
           {Platform.OS === 'web' ? 'Upload a photo' : 'Snap your ingredients'}
         </Text>
         <Text style={styles.placeholderText}>Take a photo of ingredients on your counter</Text>
+        {items.length > 0 && (
+          <Text style={styles.counterBadge}>{items.length} item{items.length !== 1 ? 's' : ''} on counter</Text>
+        )}
         {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
       <View style={styles.shutterBar}>
-        <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
-          <Text style={styles.cancelText}>Cancel</Text>
+        <TouchableOpacity style={styles.cancelBtn} onPress={() => router.push('/(tabs)/counter')}>
+          <Text style={styles.cancelText}>{items.length > 0 ? 'Done' : 'Cancel'}</Text>
         </TouchableOpacity>
         {Platform.OS === 'web' ? (
           <TouchableOpacity style={styles.uploadBtn} onPress={handleWebUpload}>
@@ -305,6 +309,7 @@ const styles = StyleSheet.create({
   cameraPlaceholder: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxl },
   placeholderTitle: { fontFamily: 'Fraunces', fontSize: 22, fontWeight: '400', color: colors.ink, marginBottom: 8 },
   placeholderText: { fontFamily: 'Inter', fontSize: 14, color: colors.inkSoft, textAlign: 'center' },
+  counterBadge: { fontFamily: 'Inter', fontSize: 13, fontWeight: '600', color: colors.sage500, marginTop: 12 },
   errorText: { fontFamily: 'Inter', fontSize: 13, color: colors.tc600, marginTop: 12, textAlign: 'center' },
   shutterBar: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: spacing.xl, padding: spacing.xl, paddingBottom: 48 },
   cancelBtn: {},

@@ -1,5 +1,5 @@
 import { API_BASE } from '@/lib/api';
-import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useState, useCallback, useRef } from 'react';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
@@ -89,6 +89,7 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
   return (
     <View style={styles.overlay}>
       <Pressable style={styles.backdrop} onPress={onClose} />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.sheetWrapper}>
       <View style={styles.sheet}>
         <View style={styles.header}>
           <Text style={styles.title}>Add ingredients</Text>
@@ -147,6 +148,7 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
           </View>
         )}
       </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -154,6 +156,7 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
 const styles = StyleSheet.create({
   overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'flex-end', zIndex: 100 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(42,31,23,0.3)' },
+  sheetWrapper: { justifyContent: 'flex-end' },
   sheet: { backgroundColor: colors.paper, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, padding: spacing.xl, paddingBottom: 48, maxHeight: '80%' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
   title: { ...typography.h3, color: colors.ink },
