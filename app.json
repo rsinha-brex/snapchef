@@ -36,7 +36,13 @@
       ],
       "expo-image",
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "snapchef needs camera access to identify ingredients on your counter."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ManualAddSheet from '@/components/ManualAddSheet';
 
@@ -96,6 +97,33 @@ export default function CameraScreen() {
   function handleWebUpload() {
     if (Platform.OS === 'web' && fileInputRef.current) {
       fileInputRef.current.click();
+    }
+  }
+
+  async function handleNativeCamera() {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      setError('Camera permission is required to take photos');
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+      base64: true,
+    });
+    if (!result.canceled && result.assets[0].base64) {
+      handleFileSelected(result.assets[0].base64);
+    }
+  }
+
+  async function handleNativeGallery() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+      base64: true,
+    });
+    if (!result.canceled && result.assets[0].base64) {
+      handleFileSelected(result.assets[0].base64);
     }
   }
 
@@ -219,7 +247,9 @@ export default function CameraScreen() {
   return (
     <View style={styles.viewfinder}>
       <View style={styles.cameraPlaceholder}>
-        <Text style={styles.placeholderTitle}>Upload a photo</Text>
+        <Text style={styles.placeholderTitle}>
+          {Platform.OS === 'web' ? 'Upload a photo' : 'Snap your ingredients'}
+        </Text>
         <Text style={styles.placeholderText}>Take a photo of ingredients on your counter</Text>
         {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
@@ -227,9 +257,20 @@ export default function CameraScreen() {
         <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.uploadBtn} onPress={handleWebUpload}>
-          <Text style={styles.uploadBtnText}>Choose photo</Text>
-        </TouchableOpacity>
+        {Platform.OS === 'web' ? (
+          <TouchableOpacity style={styles.uploadBtn} onPress={handleWebUpload}>
+            <Text style={styles.uploadBtnText}>Choose photo</Text>
+          </TouchableOpacity>
+        ) : (
+          <>
+            <TouchableOpacity style={styles.uploadBtn} onPress={handleNativeCamera}>
+              <Text style={styles.uploadBtnText}>Take photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.galleryBtn} onPress={handleNativeGallery}>
+              <Text style={styles.galleryBtnText}>Gallery</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );
@@ -269,6 +310,8 @@ const styles = StyleSheet.create({
   cancelText: { color: colors.inkSoft, fontSize: 14, fontWeight: '500' },
   uploadBtn: { backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 14, paddingHorizontal: 28 },
   uploadBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
+  galleryBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 14, paddingHorizontal: 20 },
+  galleryBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
   loadingContainer: { flex: 1, backgroundColor: colors.cream },
   reviewContainer: { flex: 1, backgroundColor: colors.cream, padding: spacing.xl, paddingTop: 60 },
   reviewTitle: { ...typography.h2, color: colors.ink, marginBottom: 4 },
