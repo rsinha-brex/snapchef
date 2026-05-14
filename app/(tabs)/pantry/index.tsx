@@ -1,10 +1,12 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { Search, Minus } from 'lucide-react-native';
+import { Search, Minus, BookOpen } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
 import AccentHeader from '@/components/AccentHeader';
 import ManualAddSheet from '@/components/ManualAddSheet';
+import { useCounterStore } from '@/stores/counter';
 import { MOCK_PANTRY } from '@/lib/mock-data';
 
 const CATEGORIES = ['produce', 'proteins', 'dairy', 'grains', 'pantry_staples', 'condiments'];
@@ -25,11 +27,18 @@ type PantryItem = { id: string; name: string; category?: string; source?: string
 
 export default function PantryScreen() {
   const { getToken, isSignedIn } = useAuth();
+  const router = useRouter();
+  const { addItems } = useCounterStore();
   const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState(false);
   const hasFetched = useRef(false);
+
+  function handleFindRecipes() {
+    addItems(pantryItems.map(item => ({ name: item.name, category: item.category, source: 'pantry-pull' as const })));
+    router.push('/(tabs)/counter/match');
+  }
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -214,6 +223,10 @@ export default function PantryScreen() {
         )}
       />
       <View style={styles.footer}>
+        <TouchableOpacity style={styles.findBtn} onPress={handleFindRecipes}>
+          <BookOpen size={16} color={colors.cream} />
+          <Text style={styles.findBtnText}>Find recipes with these</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.addBtn} onPress={() => setShowAdd(true)}>
           <Text style={styles.addBtnText}>+ Add items</Text>
         </TouchableOpacity>
@@ -252,7 +265,9 @@ const styles = StyleSheet.create({
   removeCircle: { width: 20, height: 20, borderRadius: 10, backgroundColor: colors.tc600, alignItems: 'center', justifyContent: 'center' },
   tileSwatch: { width: 26, height: 26, borderRadius: 8, backgroundColor: colors.creamDeep, alignItems: 'center', justifyContent: 'center' },
   tileName: { fontFamily: 'Inter', fontSize: 12, color: colors.ink, textTransform: 'capitalize', flex: 1 },
-  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: spacing.lg, paddingBottom: 44, backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.hairline },
-  addBtn: { backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center' },
-  addBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
+  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: spacing.lg, paddingBottom: 44, backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.hairline, gap: spacing.sm },
+  findBtn: { flexDirection: 'row', backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center', justifyContent: 'center', gap: 8 },
+  findBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
+  addBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center' },
+  addBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
 });
