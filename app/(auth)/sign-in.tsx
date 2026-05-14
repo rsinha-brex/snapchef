@@ -16,16 +16,21 @@ export default function SignInScreen() {
     if (!signIn) return;
     setLoading(true);
     try {
-      const redirectUrl = Platform.OS === 'web'
-        ? window.location.origin
-        : Linking.createURL('/oauth-callback');
-
-      const { createdSessionId } = await startSSOFlow({
-        strategy: 'oauth_google',
-        redirectUrl,
-      });
-      if (createdSessionId) {
-        await setActive!({ session: createdSessionId });
+      if (Platform.OS === 'web') {
+        await signIn.authenticateWithRedirect({
+          strategy: 'oauth_google',
+          redirectUrl: '/sso-callback',
+          redirectUrlComplete: '/',
+        });
+      } else {
+        const redirectUrl = Linking.createURL('/oauth-callback');
+        const { createdSessionId } = await startSSOFlow({
+          strategy: 'oauth_google',
+          redirectUrl,
+        });
+        if (createdSessionId) {
+          await setActive!({ session: createdSessionId });
+        }
       }
     } catch (error) {
       console.error('Google sign-in error:', error);
