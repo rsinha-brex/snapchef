@@ -47,7 +47,7 @@ export default function MatchScreen() {
   }
 
   const displayMatches = exactOnly
-    ? matches.filter(r => r.missedCount === 0)
+    ? matches.filter(r => r.missedCount <= 2)
     : matches;
 
   if (loading) {
@@ -112,13 +112,13 @@ export default function MatchScreen() {
           style={[styles.toggleBtn, exactOnly && styles.toggleBtnActive]}
           onPress={() => setExactOnly(true)}
         >
-          <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Exact only</Text>
+          <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Can make now</Text>
         </TouchableOpacity>
       </View>
 
       {exactOnly && displayMatches.length === 0 && (
         <View style={styles.noExact}>
-          <Text style={styles.noExactText}>No recipes use only your ingredients. Try adding more items or switch to "Best matches".</Text>
+          <Text style={styles.noExactText}>No recipes you can make with just these ingredients. Try adding more items or switch to "Best matches".</Text>
         </View>
       )}
 
