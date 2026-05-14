@@ -19,11 +19,9 @@ export async function GET(request: Request) {
     : '';
 
   const nonStaples = ingredientList.filter(i => !STAPLES.has(i));
-  const searchTerms = (nonStaples.length > 0 ? nonStaples : ingredientList).slice(0, 6);
+  const searchTerms = (nonStaples.length > 0 ? nonStaples : ingredientList).slice(0, 4);
 
   try {
-    let searchTerms = (nonStaples.length > 0 ? nonStaples : ingredientList).slice(0, 6);
-
     let result = await algolia.searchSingleIndex({
       indexName: RECIPE_INDEX,
       searchParams: {

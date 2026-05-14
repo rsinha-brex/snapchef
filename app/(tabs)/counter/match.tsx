@@ -20,18 +20,19 @@ export default function MatchScreen() {
   const BATCH = 10;
 
   useEffect(() => {
-    fetchMatches();
+    fetchMatches(true);
   }, []);
 
-  async function fetchMatches() {
-    setLoading(true);
+  async function fetchMatches(initial = false) {
+    if (initial) setLoading(true);
+    else setLoadingMore(true);
     try {
       const ingredients = items.map(i => i.name).join(',');
-      const seenParam = seen.length > 0 ? `&seen=${seen.join(',')}` : '';
+      const seenParam = !initial && seen.length > 0 ? `&seen=${seen.join(',')}` : '';
       const response = await fetch(`${API_BASE}/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20${seenParam}`);
       const data = await response.json();
       const newRecipes = data.recipes || [];
-      setAllMatches(prev => [...prev, ...newRecipes]);
+      setAllMatches(prev => initial ? newRecipes : [...prev, ...newRecipes]);
       setSeen(prev => [...prev, ...newRecipes.map((r: any) => String(r.objectID || r.id))]);
     } catch (error) {
       console.error('Match failed:', error);
@@ -43,11 +44,10 @@ export default function MatchScreen() {
 
   async function handleShowMore() {
     const nextVisible = visible + BATCH;
-    if (nextVisible > allMatches.length) {
-      setLoadingMore(true);
-      await fetchMatches();
-    }
     setVisible(nextVisible);
+    if (nextVisible > allMatches.length) {
+      await fetchMatches(false);
+    }
   }
 
   const filtered = exactOnly
