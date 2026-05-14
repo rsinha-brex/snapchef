@@ -151,9 +151,10 @@ export default function RecipeDetailScreen() {
         {imageUrl && <Image source={{ uri: imageUrl }} style={styles.heroImage} />}
 
         <TouchableOpacity style={styles.backBtn} onPress={() => {
-          if (from === 'match') router.push('/(tabs)/counter/match');
-          else if (from === 'saved') router.push('/(tabs)/saved');
-          else router.back();
+          if (from === 'match') router.replace('/(tabs)/counter/match');
+          else if (from === 'saved') router.replace('/(tabs)/saved');
+          else if (router.canGoBack()) router.back();
+          else router.replace('/(tabs)/recipes');
         }}>
           <ChevronLeft size={20} color={colors.ink} />
           <Text style={styles.backBtnText}>Back</Text>

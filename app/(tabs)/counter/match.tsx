@@ -61,26 +61,27 @@ export default function MatchScreen() {
       if (data.recipes) {
         setClaudeRecipes(prev => [...prev, ...data.recipes]);
         setGeneratedTitles(prev => [...prev, ...data.recipes.map((r: any) => r.title)]);
-
-        if (isSignedIn) {
-          try {
-            const token = await getToken();
-            for (const r of data.recipes) {
-              await fetch(`${API_BASE}/api/me/adaptations`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                body: JSON.stringify({
-                  recipeId: Math.floor(Math.random() * 1000000000),
-                  recipeTitle: 'Chef Claude: ' + r.title,
-                  adaptedPayload: { adapted: r, viability: 'good', adaptations: [], isClaudeGenerated: true },
-                }),
-              });
-            }
-          } catch (e) { console.error('Failed to save Claude recipes:', e); }
-        }
       }
     } catch (e) { console.error('Generate failed:', e); }
     finally { setGenerating(false); }
+  }
+
+  async function openClaudeRecipe(recipe: any) {
+    if (isSignedIn) {
+      try {
+        const token = await getToken();
+        await fetch(`${API_BASE}/api/me/adaptations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            recipeId: Math.floor(Math.random() * 1000000000),
+            recipeTitle: 'Chef Claude: ' + recipe.title,
+            adaptedPayload: { adapted: recipe, viability: 'good', adaptations: [], isClaudeGenerated: true },
+          }),
+        });
+      } catch (e) { console.error('Save Claude recipe failed:', e); }
+    }
+    router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(recipe.objectID || recipe.id), recipe: JSON.stringify(recipe), from: 'match' } });
   }
 
   async function handleShowMore() {
@@ -178,7 +179,9 @@ export default function MatchScreen() {
                 usedCount: item.usedCount || 0,
                 totalCount: (item.ingredient_names || []).length,
               }}
-              onTap={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item), from: 'match' } })}
+              onTap={() => item.isClaudeGenerated
+                ? openClaudeRecipe(item)
+                : router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item), from: 'match' } })}
             />
           </View>
         ))}

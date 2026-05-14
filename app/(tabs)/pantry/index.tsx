@@ -29,7 +29,7 @@ type PantryItem = { id: string; name: string; category?: string; source?: string
 export default function PantryScreen() {
   const { getToken, isSignedIn } = useAuth();
   const router = useRouter();
-  const { addItems } = useCounterStore();
+  const { addItems, clear } = useCounterStore();
   const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -37,6 +37,7 @@ export default function PantryScreen() {
   const hasFetched = useRef(false);
 
   function handleFindRecipes() {
+    clear();
     addItems(pantryItems.map(item => ({ name: item.name, category: item.category, source: 'pantry-pull' as const })));
     router.push('/(tabs)/counter/match');
   }

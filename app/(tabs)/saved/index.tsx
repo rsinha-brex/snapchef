@@ -100,7 +100,25 @@ export default function SavedScreen() {
           keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => {
+                const adapted = item.adaptedPayload?.adapted || item.adaptedPayload;
+                const recipeForDetail = {
+                  objectID: String(item.recipeId),
+                  id: String(item.recipeId),
+                  title: item.recipeTitle,
+                  cuisine: adapted?.cuisine || 'AI',
+                  total_time_minutes: adapted?.total_time_minutes || 30,
+                  difficulty: adapted?.difficulty || 'medium',
+                  servings: adapted?.servings || 4,
+                  ingredients: adapted?.ingredients || [],
+                  ingredient_names: adapted?.ingredient_names || (adapted?.ingredients || []).map((i: any) => i.name),
+                  instructions: adapted?.instructions || [],
+                };
+                router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.recipeId), recipe: JSON.stringify(recipeForDetail), from: 'saved' } });
+              }}
+            >
               {item.recipeImage && <Image source={{ uri: item.recipeImage }} style={styles.cardThumb} />}
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle} numberOfLines={2}>{item.recipeTitle}</Text>
@@ -113,7 +131,7 @@ export default function SavedScreen() {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>No adaptations saved</Text>
-              <Text style={styles.emptySubtitle}>When you "Make it with what I have", save the result here</Text>
+              <Text style={styles.emptySubtitle}>When you "Make it with what I have" or open a Chef Claude recipe, it saves here</Text>
             </View>
           }
         />
