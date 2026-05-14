@@ -14,6 +14,7 @@ export default function MatchScreen() {
   const [loading, setLoading] = useState(true);
   const [seen, setSeen] = useState<string[]>([]);
   const [exhausted, setExhausted] = useState(false);
+  const [exactOnly, setExactOnly] = useState(false);
 
   useEffect(() => {
     fetchMatches();
@@ -44,6 +45,10 @@ export default function MatchScreen() {
     setExhausted(false);
     fetchMatches();
   }
+
+  const displayMatches = exactOnly
+    ? matches.filter(r => r.missedCount === 0)
+    : matches;
 
   if (loading) {
     return (
@@ -90,13 +95,35 @@ export default function MatchScreen() {
         <Text style={styles.backBtnText}>Back</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
-        <AccentHeader prefix={`${matches.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
+        <AccentHeader prefix={`${displayMatches.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
         <TouchableOpacity style={styles.refreshIcon} onPress={handleRefresh}>
           <RefreshCw size={18} color={colors.inkSoft} />
         </TouchableOpacity>
       </View>
+
+      <View style={styles.toggleRow}>
+        <TouchableOpacity
+          style={[styles.toggleBtn, !exactOnly && styles.toggleBtnActive]}
+          onPress={() => setExactOnly(false)}
+        >
+          <Text style={[styles.toggleText, !exactOnly && styles.toggleTextActive]}>Best matches</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.toggleBtn, exactOnly && styles.toggleBtnActive]}
+          onPress={() => setExactOnly(true)}
+        >
+          <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Exact only</Text>
+        </TouchableOpacity>
+      </View>
+
+      {exactOnly && displayMatches.length === 0 && (
+        <View style={styles.noExact}>
+          <Text style={styles.noExactText}>No recipes use only your ingredients. Try adding more items or switch to "Best matches".</Text>
+        </View>
+      )}
+
       <FlatList
-        data={matches}
+        data={displayMatches}
         keyExtractor={(item) => String(item.objectID || item.id)}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
@@ -129,6 +156,13 @@ const styles = StyleSheet.create({
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
   backBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '500', color: colors.ink },
   refreshIcon: { padding: 12, marginTop: 12, marginRight: 12 },
+  toggleRow: { flexDirection: 'row', marginHorizontal: spacing.lg, marginBottom: spacing.md, backgroundColor: colors.creamDeep, borderRadius: radius.pill, padding: 3 },
+  toggleBtn: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: radius.pill },
+  toggleBtnActive: { backgroundColor: colors.paper },
+  toggleText: { fontFamily: 'Inter', fontSize: 13, fontWeight: '500', color: colors.inkHint },
+  toggleTextActive: { color: colors.tc700, fontWeight: '600' },
+  noExact: { padding: spacing.xl, alignItems: 'center' },
+  noExactText: { ...typography.body, color: colors.inkSoft, textAlign: 'center', lineHeight: 20 },
   list: { paddingHorizontal: spacing.lg, paddingBottom: 48 },
   exhausted: { flex: 1, backgroundColor: colors.cream, paddingTop: 56 },
   exhaustedContent: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxl },
