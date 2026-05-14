@@ -1,6 +1,6 @@
 import { API_BASE } from '@/lib/api';
-import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { useState, useCallback, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet, Keyboard, Platform } from 'react-native';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
 import ingredients from '@/data/canonical-ingredients.json';
@@ -28,6 +28,17 @@ interface Props {
 
 export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
   const { addItem } = useCounterStore();
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', e => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const hideSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+    return () => { showSub.remove(); hideSub.remove(); };
+  }, []);
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<typeof ingredients>([]);
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -87,13 +98,9 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
   if (!visible) return null;
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.overlay}
-      pointerEvents="box-none"
-    >
+    <View style={styles.overlay}>
       <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={styles.sheet}>
+      <View style={[styles.sheet, { paddingBottom: keyboardHeight + 48 }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Add ingredients</Text>
           <TouchableOpacity onPress={onClose}>
@@ -151,14 +158,14 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
           </View>
         )}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'flex-end', zIndex: 100 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(42,31,23,0.3)' },
-  sheet: { backgroundColor: colors.paper, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, padding: spacing.xl, paddingBottom: 48, maxHeight: '80%' },
+  sheet: { backgroundColor: colors.paper, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, padding: spacing.xl, maxHeight: '90%' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
   title: { ...typography.h3, color: colors.ink },
   doneBtn: { ...typography.body, color: colors.tc600, fontWeight: '600' },
