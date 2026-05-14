@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const ingredients = url.searchParams.get('ingredients') || '';
   const seen = url.searchParams.get('seen') || '';
-  const limit = Math.min(parseInt(url.searchParams.get('limit') || '5'), 10);
+  const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 40);
 
   if (!ingredients) {
     return Response.json({ error: 'ingredients param required' }, { status: 400 });
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       searchParams: {
         query: searchTerms.join(' '),
         filters: notFilter,
-        hitsPerPage: Math.max(limit * 4, 20),
+        hitsPerPage: 40,
         attributesToRetrieve: ['id', 'title', 'cuisine', 'total_time_minutes', 'difficulty', 'ingredient_names', 'ingredients', 'instructions', 'servings', 'meal_type', 'dietary', 'image_url'],
       },
     });
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         searchParams: {
           query: searchTerms.slice(0, 3).join(' '),
           filters: notFilter,
-          hitsPerPage: Math.max(limit * 4, 20),
+          hitsPerPage: 40,
           attributesToRetrieve: ['id', 'title', 'cuisine', 'total_time_minutes', 'difficulty', 'ingredient_names', 'ingredients', 'instructions', 'servings', 'meal_type', 'dietary', 'image_url'],
         },
       });

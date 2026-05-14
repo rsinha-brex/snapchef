@@ -1,7 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
-import { RefreshCw, CheckCircle, ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
 import RecipeCard from '@/components/RecipeCard';
@@ -10,11 +10,11 @@ import AccentHeader from '@/components/AccentHeader';
 export default function MatchScreen() {
   const router = useRouter();
   const { items } = useCounterStore();
-  const [matches, setMatches] = useState<any[]>([]);
+  const [allMatches, setAllMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [seen, setSeen] = useState<string[]>([]);
-  const [exhausted, setExhausted] = useState(false);
   const [exactOnly, setExactOnly] = useState(false);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 5;
 
   useEffect(() => {
     fetchMatches();
@@ -24,16 +24,9 @@ export default function MatchScreen() {
     setLoading(true);
     try {
       const ingredients = items.map(i => i.name).join(',');
-      const seenParam = seen.length > 0 ? `&seen=${seen.join(',')}` : '';
-      const response = await fetch(`/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}${seenParam}&limit=5`);
+      const response = await fetch(`/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20`);
       const data = await response.json();
-
-      if (!data.recipes || data.recipes.length === 0) {
-        setExhausted(true);
-      } else {
-        setMatches(data.recipes);
-        setSeen(prev => [...prev, ...data.recipes.map((r: any) => r.objectID || r.id)]);
-      }
+      setAllMatches(data.recipes || []);
     } catch (error) {
       console.error('Match failed:', error);
     } finally {
@@ -41,14 +34,12 @@ export default function MatchScreen() {
     }
   }
 
-  function handleRefresh() {
-    setExhausted(false);
-    fetchMatches();
-  }
+  const filtered = exactOnly
+    ? allMatches.filter(r => r.missedCount <= 2)
+    : allMatches;
 
-  const displayMatches = exactOnly
-    ? matches.filter(r => r.missedCount <= 2)
-    : matches;
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const displayMatches = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   if (loading) {
     return (
@@ -65,29 +56,6 @@ export default function MatchScreen() {
     );
   }
 
-  if (exhausted || matches.length === 0) {
-    return (
-      <View style={styles.exhausted}>
-        <AccentHeader prefix="That's" accent="everything" sub={`You've seen all ${seen.length} matches for this counter`} />
-        <View style={styles.exhaustedContent}>
-          <View style={styles.exhaustedIcon}>
-            <CheckCircle size={40} color={colors.sage500} />
-          </View>
-          <Text style={styles.exhaustedTitle}>Pick one or pivot</Text>
-          <Text style={styles.exhaustedSubtitle}>Try adding another ingredient to your counter for fresh ideas.</Text>
-          <View style={styles.exhaustedCtas}>
-            <TouchableOpacity style={styles.primaryCta} onPress={() => router.back()}>
-              <Text style={styles.primaryCtaText}>Back to my matches</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.secondaryCta} onPress={() => router.back()}>
-              <Text style={styles.secondaryCtaText}>Add to my counter</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backBtn} onPress={() => router.push('/(tabs)/counter')}>
@@ -95,30 +63,31 @@ export default function MatchScreen() {
         <Text style={styles.backBtnText}>Back</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
-        <AccentHeader prefix={`${displayMatches.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
-        <TouchableOpacity style={styles.refreshIcon} onPress={handleRefresh}>
-          <RefreshCw size={18} color={colors.inkSoft} />
-        </TouchableOpacity>
+        <AccentHeader prefix={`${filtered.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
       </View>
 
       <View style={styles.toggleRow}>
         <TouchableOpacity
           style={[styles.toggleBtn, !exactOnly && styles.toggleBtnActive]}
-          onPress={() => setExactOnly(false)}
+          onPress={() => { setExactOnly(false); setPage(0); }}
         >
           <Text style={[styles.toggleText, !exactOnly && styles.toggleTextActive]}>Best matches</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.toggleBtn, exactOnly && styles.toggleBtnActive]}
-          onPress={() => setExactOnly(true)}
+          onPress={() => { setExactOnly(true); setPage(0); }}
         >
           <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Can make now</Text>
         </TouchableOpacity>
       </View>
 
-      {exactOnly && displayMatches.length === 0 && (
+      {filtered.length === 0 && (
         <View style={styles.noExact}>
-          <Text style={styles.noExactText}>No recipes you can make with just these ingredients. Try adding more items or switch to "Best matches".</Text>
+          <Text style={styles.noExactText}>
+            {exactOnly
+              ? 'No recipes you can make with just these ingredients. Try "Best matches" or add more items.'
+              : 'No matches found. Try adding more ingredients.'}
+          </Text>
         </View>
       )}
 
@@ -143,6 +112,26 @@ export default function MatchScreen() {
           />
         )}
       />
+
+      {totalPages > 1 && (
+        <View style={styles.pagination}>
+          <TouchableOpacity
+            style={[styles.pageBtn, page === 0 && styles.pageBtnDisabled]}
+            onPress={() => setPage(p => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >
+            <Text style={[styles.pageBtnText, page === 0 && styles.pageBtnTextDisabled]}>← Previous</Text>
+          </TouchableOpacity>
+          <Text style={styles.pageIndicator}>{page + 1} / {totalPages}</Text>
+          <TouchableOpacity
+            style={[styles.pageBtn, page >= totalPages - 1 && styles.pageBtnDisabled]}
+            onPress={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+            disabled={page >= totalPages - 1}
+          >
+            <Text style={[styles.pageBtnText, page >= totalPages - 1 && styles.pageBtnTextDisabled]}>Next →</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -163,7 +152,13 @@ const styles = StyleSheet.create({
   toggleTextActive: { color: colors.tc700, fontWeight: '600' },
   noExact: { padding: spacing.xl, alignItems: 'center' },
   noExactText: { ...typography.body, color: colors.inkSoft, textAlign: 'center', lineHeight: 20 },
-  list: { paddingHorizontal: spacing.lg, paddingBottom: 48 },
+  list: { paddingHorizontal: spacing.lg, paddingBottom: 100 },
+  pagination: { position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: spacing.lg, paddingBottom: 44, backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.hairline },
+  pageBtn: { paddingVertical: 10, paddingHorizontal: 16 },
+  pageBtnDisabled: { opacity: 0.3 },
+  pageBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.tc600 },
+  pageBtnTextDisabled: { color: colors.inkMute },
+  pageIndicator: { fontFamily: 'Inter', fontSize: 13, color: colors.inkHint },
   exhausted: { flex: 1, backgroundColor: colors.cream, paddingTop: 56 },
   exhaustedContent: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxl },
   exhaustedIcon: { width: 88, height: 88, borderRadius: 44, backgroundColor: colors.creamDeep, alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
