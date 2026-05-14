@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useSignIn, useSSO } from '@clerk/clerk-expo';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,9 +16,13 @@ export default function SignInScreen() {
     if (!signIn) return;
     setLoading(true);
     try {
+      const redirectUrl = Platform.OS === 'web'
+        ? window.location.origin
+        : Linking.createURL('/oauth-callback');
+
       const { createdSessionId } = await startSSOFlow({
         strategy: 'oauth_google',
-        redirectUrl: 'snapchef://oauth-callback',
+        redirectUrl,
       });
       if (createdSessionId) {
         await setActive!({ session: createdSessionId });
