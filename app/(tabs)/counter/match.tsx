@@ -1,5 +1,5 @@
 import { API_BASE } from '@/lib/api';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react-native';
@@ -107,21 +107,10 @@ export default function MatchScreen() {
         </View>
       )}
 
-      <FlatList
-        data={displayMatches}
-        keyExtractor={(item) => String(item.objectID || item.id)}
-        contentContainerStyle={styles.list}
-        ListFooterComponent={
-          displayMatches.length > 0 ? (
-            <TouchableOpacity style={styles.showMoreBtn} onPress={handleShowMore} disabled={loadingMore}>
-              <Text style={styles.showMoreText}>
-                {loadingMore ? 'Loading…' : `Show more (${displayMatches.length} shown)`}
-              </Text>
-            </TouchableOpacity>
-          ) : null
-        }
-        renderItem={({ item }) => (
+      <ScrollView contentContainerStyle={styles.list}>
+        {displayMatches.map(item => (
           <RecipeCard
+            key={String(item.objectID || item.id)}
             recipe={{
               id: String(item.objectID || item.id),
               title: item.title,
@@ -135,8 +124,15 @@ export default function MatchScreen() {
             }}
             onTap={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item) } })}
           />
+        ))}
+        {displayMatches.length > 0 && (
+          <TouchableOpacity style={styles.showMoreBtn} onPress={handleShowMore} disabled={loadingMore}>
+            <Text style={styles.showMoreText}>
+              {loadingMore ? 'Loading…' : 'Show more'}
+            </Text>
+          </TouchableOpacity>
         )}
-      />
+      </ScrollView>
     </View>
   );
 }
