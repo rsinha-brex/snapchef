@@ -1,0 +1,510 @@
+[
+  {
+    "name": "salt",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "black pepper",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "olive oil",
+    "category": "condiments"
+  },
+  {
+    "name": "vegetable oil",
+    "category": "condiments"
+  },
+  {
+    "name": "butter",
+    "category": "dairy"
+  },
+  {
+    "name": "garlic",
+    "category": "produce"
+  },
+  {
+    "name": "onion",
+    "category": "produce"
+  },
+  {
+    "name": "yellow onion",
+    "category": "produce"
+  },
+  {
+    "name": "red onion",
+    "category": "produce"
+  },
+  {
+    "name": "green onion",
+    "category": "produce"
+  },
+  {
+    "name": "tomatoes",
+    "category": "produce"
+  },
+  {
+    "name": "cherry tomatoes",
+    "category": "produce"
+  },
+  {
+    "name": "potatoes",
+    "category": "produce"
+  },
+  {
+    "name": "carrots",
+    "category": "produce"
+  },
+  {
+    "name": "celery",
+    "category": "produce"
+  },
+  {
+    "name": "bell pepper",
+    "category": "produce"
+  },
+  {
+    "name": "jalape\u00f1o",
+    "category": "produce"
+  },
+  {
+    "name": "ginger",
+    "category": "produce"
+  },
+  {
+    "name": "lemon",
+    "category": "produce"
+  },
+  {
+    "name": "lime",
+    "category": "produce"
+  },
+  {
+    "name": "avocado",
+    "category": "produce"
+  },
+  {
+    "name": "spinach",
+    "category": "produce"
+  },
+  {
+    "name": "kale",
+    "category": "produce"
+  },
+  {
+    "name": "broccoli",
+    "category": "produce"
+  },
+  {
+    "name": "cauliflower",
+    "category": "produce"
+  },
+  {
+    "name": "zucchini",
+    "category": "produce"
+  },
+  {
+    "name": "mushrooms",
+    "category": "produce"
+  },
+  {
+    "name": "corn",
+    "category": "produce"
+  },
+  {
+    "name": "cucumber",
+    "category": "produce"
+  },
+  {
+    "name": "lettuce",
+    "category": "produce"
+  },
+  {
+    "name": "cabbage",
+    "category": "produce"
+  },
+  {
+    "name": "sweet potato",
+    "category": "produce"
+  },
+  {
+    "name": "asparagus",
+    "category": "produce"
+  },
+  {
+    "name": "green beans",
+    "category": "produce"
+  },
+  {
+    "name": "peas",
+    "category": "produce"
+  },
+  {
+    "name": "eggplant",
+    "category": "produce"
+  },
+  {
+    "name": "basil",
+    "category": "produce"
+  },
+  {
+    "name": "cilantro",
+    "category": "produce"
+  },
+  {
+    "name": "parsley",
+    "category": "produce"
+  },
+  {
+    "name": "rosemary",
+    "category": "produce"
+  },
+  {
+    "name": "thyme",
+    "category": "produce"
+  },
+  {
+    "name": "mint",
+    "category": "produce"
+  },
+  {
+    "name": "apple",
+    "category": "produce"
+  },
+  {
+    "name": "banana",
+    "category": "produce"
+  },
+  {
+    "name": "strawberries",
+    "category": "produce"
+  },
+  {
+    "name": "blueberries",
+    "category": "produce"
+  },
+  {
+    "name": "orange",
+    "category": "produce"
+  },
+  {
+    "name": "chicken breast",
+    "category": "proteins"
+  },
+  {
+    "name": "chicken thighs",
+    "category": "proteins"
+  },
+  {
+    "name": "ground beef",
+    "category": "proteins"
+  },
+  {
+    "name": "ground turkey",
+    "category": "proteins"
+  },
+  {
+    "name": "steak",
+    "category": "proteins"
+  },
+  {
+    "name": "pork chops",
+    "category": "proteins"
+  },
+  {
+    "name": "bacon",
+    "category": "proteins"
+  },
+  {
+    "name": "sausage",
+    "category": "proteins"
+  },
+  {
+    "name": "salmon",
+    "category": "proteins"
+  },
+  {
+    "name": "shrimp",
+    "category": "proteins"
+  },
+  {
+    "name": "tuna",
+    "category": "proteins"
+  },
+  {
+    "name": "tofu",
+    "category": "proteins"
+  },
+  {
+    "name": "eggs",
+    "category": "proteins"
+  },
+  {
+    "name": "milk",
+    "category": "dairy"
+  },
+  {
+    "name": "heavy cream",
+    "category": "dairy"
+  },
+  {
+    "name": "sour cream",
+    "category": "dairy"
+  },
+  {
+    "name": "cream cheese",
+    "category": "dairy"
+  },
+  {
+    "name": "cheddar cheese",
+    "category": "dairy"
+  },
+  {
+    "name": "mozzarella",
+    "category": "dairy"
+  },
+  {
+    "name": "parmesan",
+    "category": "dairy"
+  },
+  {
+    "name": "yogurt",
+    "category": "dairy"
+  },
+  {
+    "name": "feta cheese",
+    "category": "dairy"
+  },
+  {
+    "name": "rice",
+    "category": "grains"
+  },
+  {
+    "name": "pasta",
+    "category": "grains"
+  },
+  {
+    "name": "bread",
+    "category": "grains"
+  },
+  {
+    "name": "flour",
+    "category": "grains"
+  },
+  {
+    "name": "oats",
+    "category": "grains"
+  },
+  {
+    "name": "quinoa",
+    "category": "grains"
+  },
+  {
+    "name": "tortillas",
+    "category": "grains"
+  },
+  {
+    "name": "noodles",
+    "category": "grains"
+  },
+  {
+    "name": "breadcrumbs",
+    "category": "grains"
+  },
+  {
+    "name": "cornstarch",
+    "category": "grains"
+  },
+  {
+    "name": "sugar",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "brown sugar",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "honey",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "maple syrup",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "vanilla extract",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "baking powder",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "baking soda",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "cocoa powder",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "chicken broth",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "vegetable broth",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "canned tomatoes",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "tomato paste",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "coconut milk",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "beans",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "black beans",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "chickpeas",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "lentils",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "peanut butter",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "almonds",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "walnuts",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "soy sauce",
+    "category": "condiments"
+  },
+  {
+    "name": "hot sauce",
+    "category": "condiments"
+  },
+  {
+    "name": "worcestershire sauce",
+    "category": "condiments"
+  },
+  {
+    "name": "vinegar",
+    "category": "condiments"
+  },
+  {
+    "name": "apple cider vinegar",
+    "category": "condiments"
+  },
+  {
+    "name": "balsamic vinegar",
+    "category": "condiments"
+  },
+  {
+    "name": "mustard",
+    "category": "condiments"
+  },
+  {
+    "name": "ketchup",
+    "category": "condiments"
+  },
+  {
+    "name": "mayonnaise",
+    "category": "condiments"
+  },
+  {
+    "name": "sesame oil",
+    "category": "condiments"
+  },
+  {
+    "name": "fish sauce",
+    "category": "condiments"
+  },
+  {
+    "name": "sriracha",
+    "category": "condiments"
+  },
+  {
+    "name": "cumin",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "paprika",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "chili powder",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "cinnamon",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "oregano",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "red pepper flakes",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "turmeric",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "curry powder",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "italian seasoning",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "bay leaves",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "nutmeg",
+    "category": "pantry_staples"
+  },
+  {
+    "name": "frozen peas",
+    "category": "frozen"
+  },
+  {
+    "name": "frozen corn",
+    "category": "frozen"
+  },
+  {
+    "name": "frozen berries",
+    "category": "frozen"
+  },
+  {
+    "name": "frozen spinach",
+    "category": "frozen"
+  },
+  {
+    "name": "ice cream",
+    "category": "frozen"
+  }
+]
