@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Camera } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
-import { MOCK_PANTRY } from '@/lib/mock-data';
 import AccentHeader from '@/components/AccentHeader';
 import ManualAddSheet from '@/components/ManualAddSheet';
 import PantryPullSheet from '@/components/PantryPullSheet';
@@ -16,7 +15,6 @@ export default function CounterScreen() {
   const [showPantryPull, setShowPantryPull] = useState(false);
 
   if (items.length === 0) {
-    const pantryCount = MOCK_PANTRY.length;
     return (
       <View style={styles.emptyContainer}>
         <AccentHeader prefix="Your" accent="counter" sub="Nothing yet · let's build a meal" />
@@ -26,14 +24,8 @@ export default function CounterScreen() {
           </View>
           <Text style={styles.emptyTitle}>What's on your counter?</Text>
           <Text style={styles.emptySubtitle}>
-            Snap a photo of what you've got, or pull from your pantry to start cooking.
+            Snap a photo of what you've got, or add items manually to start cooking.
           </Text>
-          {pantryCount > 0 && (
-            <Text style={styles.pantryHint}>{pantryCount} items in your pantry</Text>
-          )}
-          {pantryCount === 0 && (
-            <Text style={styles.pantryHint}>No pantry items yet — add some in the Pantry tab</Text>
-          )}
 
           <View style={styles.ctas}>
             <TouchableOpacity style={styles.primaryCta} onPress={() => router.push('/(tabs)/counter/camera')}>

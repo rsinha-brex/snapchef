@@ -25,17 +25,16 @@ type PantryItem = { id: string; name: string; category?: string; source?: string
 
 export default function PantryScreen() {
   const { getToken, isSignedIn } = useAuth();
-  const [pantryItems, setPantryItems] = useState<PantryItem[]>(
-    () => MOCK_PANTRY.map((item, i) => ({ id: `mock-${i}`, ...item }))
-  );
+  const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState(false);
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (hasFetched.current || !isSignedIn) return;
+    if (hasFetched.current) return;
     hasFetched.current = true;
+    if (!isSignedIn) return;
     setLoading(true);
     (async () => {
       try {
