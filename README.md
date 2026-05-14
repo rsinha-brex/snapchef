@@ -4,8 +4,16 @@ Smart Recipe Planner — snap ingredients, get personalized recipes with AI-powe
 
 ## Live Demo
 
-- **Web**: https://drnohan-snapchef.expo.app
-- **Mobile (Expo Go)**: Install [Expo Go](https://expo.dev/go), then open https://expo.dev/accounts/drnohan/projects/snapchef?channel=production
+### Web
+https://drnohan-snapchef.expo.app
+
+### Mobile (Expo Go)
+
+1. Download Expo Go:
+   - [iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
+   - [Android (Play Store)](https://play.google.com/store/apps/details?id=host.exp.exponent)
+2. Open the app in Expo Go:
+   - [Open in Expo Go](https://expo.dev/accounts/drnohan/projects/snapchef?channel=production)
 
 ## Features
 
