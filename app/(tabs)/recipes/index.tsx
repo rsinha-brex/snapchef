@@ -73,18 +73,20 @@ export default function RecipesScreen() {
 
   async function toggleSave(recipe: any) {
     if (!isSignedIn) return;
-    const id = String(recipe.objectID || recipe.id);
-    const isSaved = savedIds.has(id);
+    const idStr = String(recipe.objectID || recipe.id);
+    const recipeIdNum = parseInt(idStr);
+    if (!recipeIdNum) return;
+    const isSaved = savedIds.has(idStr);
     setSavedIds(prev => {
       const next = new Set(prev);
-      if (isSaved) next.delete(id);
-      else next.add(id);
+      if (isSaved) next.delete(idStr);
+      else next.add(idStr);
       return next;
     });
     try {
       const token = await getToken();
       if (isSaved) {
-        await fetch(`${API_BASE}/api/me/recipes/saved?recipeId=${id}`, {
+        await fetch(`${API_BASE}/api/me/recipes/saved?recipeId=${recipeIdNum}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -92,7 +94,7 @@ export default function RecipesScreen() {
         await fetch(`${API_BASE}/api/me/recipes/saved`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ recipeId: id, title: recipe.title, image: recipe.image_url }),
+          body: JSON.stringify({ recipeId: recipeIdNum, title: recipe.title, image: recipe.image_url }),
         });
       }
     } catch (e) { console.error('Toggle save failed:', e); }

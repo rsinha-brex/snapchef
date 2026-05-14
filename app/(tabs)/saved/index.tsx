@@ -1,8 +1,8 @@
 import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
 import AccentHeader from '@/components/AccentHeader';
 
@@ -16,26 +16,32 @@ export default function SavedScreen() {
   const [savedAdaptations, setSavedAdaptations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!isSignedIn) { setLoading(false); return; }
-    (async () => {
-      try {
-        const token = await getToken();
-        const [recipesResp, adaptationsResp] = await Promise.all([
-          fetch(`${API_BASE}/api/me/recipes/saved`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API_BASE}/api/me/adaptations`, { headers: { Authorization: `Bearer ${token}` } }),
-        ]);
-        const recipesData = await recipesResp.json();
-        const adaptationsData = await adaptationsResp.json();
-        setSavedRecipes(recipesData.saved || []);
-        setSavedAdaptations(adaptationsData.adaptations || []);
-      } catch (e) {
-        console.error('Failed to load saved:', e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [isSignedIn]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!isSignedIn) { setLoading(false); return; }
+      let cancelled = false;
+      (async () => {
+        try {
+          const token = await getToken();
+          const [recipesResp, adaptationsResp] = await Promise.all([
+            fetch(`${API_BASE}/api/me/recipes/saved`, { headers: { Authorization: `Bearer ${token}` } }),
+            fetch(`${API_BASE}/api/me/adaptations`, { headers: { Authorization: `Bearer ${token}` } }),
+          ]);
+          const recipesData = await recipesResp.json();
+          const adaptationsData = await adaptationsResp.json();
+          if (!cancelled) {
+            setSavedRecipes(recipesData.saved || []);
+            setSavedAdaptations(adaptationsData.adaptations || []);
+          }
+        } catch (e) {
+          console.error('Failed to load saved:', e);
+        } finally {
+          if (!cancelled) setLoading(false);
+        }
+      })();
+      return () => { cancelled = true; };
+    }, [isSignedIn])
+  );
 
   return (
     <View style={styles.container}>

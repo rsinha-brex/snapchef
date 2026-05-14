@@ -29,8 +29,12 @@ export default function RecipeCard({ recipe, matchInfo, isSaved, onTap, onHeart 
             </Text>
           </View>
         )}
-        <TouchableOpacity style={styles.heartBtn} onPress={onHeart}>
-          <Heart size={16} color={colors.tc600} fill={isSaved ? colors.tc600 : 'none'} />
+        <TouchableOpacity
+          style={styles.heartBtn}
+          onPress={(e) => { e.stopPropagation(); onHeart?.(); }}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Heart size={18} color={colors.tc600} fill={isSaved ? colors.tc600 : 'none'} />
         </TouchableOpacity>
       </View>
 
