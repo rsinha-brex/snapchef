@@ -15,9 +15,9 @@ export default function MatchScreen() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [exactOnly, setExactOnly] = useState(false);
-  const [visible, setVisible] = useState(5);
+  const [visible, setVisible] = useState(10);
   const [seen, setSeen] = useState<string[]>([]);
-  const BATCH = 5;
+  const BATCH = 10;
 
   useEffect(() => {
     fetchMatches();
@@ -79,19 +79,19 @@ export default function MatchScreen() {
         <Text style={styles.backBtnText}>Back</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
-        <AccentHeader prefix={`${filtered.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
+        <AccentHeader prefix="Recipes" accent="for you" sub={`Using ${items.length} of your ingredients`} />
       </View>
 
       <View style={styles.toggleRow}>
         <TouchableOpacity
           style={[styles.toggleBtn, !exactOnly && styles.toggleBtnActive]}
-          onPress={() => { setExactOnly(false); setVisible(5); }}
+          onPress={() => { setExactOnly(false); setVisible(10); }}
         >
           <Text style={[styles.toggleText, !exactOnly && styles.toggleTextActive]}>Best matches</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.toggleBtn, exactOnly && styles.toggleBtnActive]}
-          onPress={() => { setExactOnly(true); setVisible(5); }}
+          onPress={() => { setExactOnly(true); setVisible(10); }}
         >
           <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Can make now</Text>
         </TouchableOpacity>
