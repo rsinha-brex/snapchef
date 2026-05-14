@@ -13,7 +13,7 @@ type ViewMode = 'original' | 'adapted' | 'not_viable';
 
 export default function RecipeDetailScreen() {
   const router = useRouter();
-  const { id, recipe: recipeParam } = useLocalSearchParams<{ id: string; recipe?: string }>();
+  const { id, recipe: recipeParam, from } = useLocalSearchParams<{ id: string; recipe?: string; from?: string }>();
   const { items: counterItems } = useCounterStore();
   const { getToken, isSignedIn } = useAuth();
   const [recipe, setRecipe] = useState<any | null>(recipeParam ? JSON.parse(recipeParam) : null);
@@ -150,7 +150,11 @@ export default function RecipeDetailScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {imageUrl && <Image source={{ uri: imageUrl }} style={styles.heroImage} />}
 
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => {
+          if (from === 'match') router.push('/(tabs)/counter/match');
+          else if (from === 'saved') router.push('/(tabs)/saved');
+          else router.back();
+        }}>
           <ChevronLeft size={20} color={colors.ink} />
           <Text style={styles.backBtnText}>Back</Text>
         </TouchableOpacity>

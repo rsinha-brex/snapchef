@@ -2,7 +2,8 @@ import { API_BASE } from '@/lib/api';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
-import { ChevronLeft } from 'lucide-react-native';
+import { useAuth } from '@clerk/clerk-expo';
+import { ChevronLeft, Sparkles } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
 import RecipeCard from '@/components/RecipeCard';
@@ -11,9 +12,13 @@ import AccentHeader from '@/components/AccentHeader';
 export default function MatchScreen() {
   const router = useRouter();
   const { items } = useCounterStore();
+  const { getToken, isSignedIn } = useAuth();
   const [allMatches, setAllMatches] = useState<any[]>([]);
+  const [claudeRecipes, setClaudeRecipes] = useState<any[]>([]);
+  const [generatedTitles, setGeneratedTitles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [exactOnly, setExactOnly] = useState(false);
   const [visible, setVisible] = useState(10);
   const [seen, setSeen] = useState<string[]>([]);
@@ -42,6 +47,42 @@ export default function MatchScreen() {
     }
   }
 
+  async function generateClaudeRecipes() {
+    if (generating) return;
+    setGenerating(true);
+    try {
+      const ingredients = items.map(i => i.name);
+      const response = await fetch(`${API_BASE}/api/recipes/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients, excludeTitles: generatedTitles }),
+      });
+      const data = await response.json();
+      if (data.recipes) {
+        setClaudeRecipes(prev => [...prev, ...data.recipes]);
+        setGeneratedTitles(prev => [...prev, ...data.recipes.map((r: any) => r.title)]);
+
+        if (isSignedIn) {
+          try {
+            const token = await getToken();
+            for (const r of data.recipes) {
+              await fetch(`${API_BASE}/api/me/adaptations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({
+                  recipeId: Math.floor(Math.random() * 1000000000),
+                  recipeTitle: 'Chef Claude: ' + r.title,
+                  adaptedPayload: { adapted: r, viability: 'good', adaptations: [], isClaudeGenerated: true },
+                }),
+              });
+            }
+          } catch (e) { console.error('Failed to save Claude recipes:', e); }
+        }
+      }
+    } catch (e) { console.error('Generate failed:', e); }
+    finally { setGenerating(false); }
+  }
+
   async function handleShowMore() {
     const nextVisible = visible + BATCH;
     setVisible(nextVisible);
@@ -50,12 +91,16 @@ export default function MatchScreen() {
     }
   }
 
-  const filtered = exactOnly
-    ? allMatches.filter(r => r.missedCount <= 2)
-    : allMatches;
-
+  const exactMatches = allMatches.filter(r => r.missedCount <= 2);
+  const filtered = exactOnly ? [...exactMatches, ...claudeRecipes] : allMatches;
   const displayMatches = filtered.slice(0, visible);
-  const hasMore = visible < filtered.length || !loading;
+
+  // Auto-generate Claude recipes when "Can make now" has fewer than 5
+  useEffect(() => {
+    if (exactOnly && !loading && exactMatches.length + claudeRecipes.length < 5 && !generating && items.length > 0) {
+      generateClaudeRecipes();
+    }
+  }, [exactOnly, loading, exactMatches.length, claudeRecipes.length]);
 
   if (loading) {
     return (
@@ -97,11 +142,11 @@ export default function MatchScreen() {
         </TouchableOpacity>
       </View>
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && !generating && (
         <View style={styles.noExact}>
           <Text style={styles.noExactText}>
             {exactOnly
-              ? 'No recipes you can make with just these ingredients. Try "Best matches" or add more items.'
+              ? 'No matching recipes yet. Chef Claude is cooking up some ideas…'
               : 'No matches found. Try adding more ingredients.'}
           </Text>
         </View>
@@ -109,30 +154,55 @@ export default function MatchScreen() {
 
       <ScrollView contentContainerStyle={styles.list}>
         {displayMatches.map(item => (
-          <RecipeCard
-            key={String(item.objectID || item.id)}
-            recipe={{
-              id: String(item.objectID || item.id),
-              title: item.title,
-              cuisine: item.cuisine,
-              total_time_minutes: item.total_time_minutes,
-              difficulty: item.difficulty,
-            }}
-            matchInfo={{
-              usedCount: item.usedCount || 0,
-              totalCount: (item.ingredient_names || []).length,
-            }}
-            onTap={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item) } })}
-          />
+          <View key={String(item.objectID || item.id)}>
+            {item.isClaudeGenerated && (
+              <View style={styles.claudeBadge}>
+                <Sparkles size={12} color={colors.tc600} />
+                <Text style={styles.claudeBadgeText}>Chef Claude</Text>
+              </View>
+            )}
+            <RecipeCard
+              recipe={{
+                id: String(item.objectID || item.id),
+                title: item.title,
+                cuisine: item.cuisine,
+                total_time_minutes: item.total_time_minutes,
+                difficulty: item.difficulty,
+              }}
+              matchInfo={{
+                usedCount: item.usedCount || 0,
+                totalCount: (item.ingredient_names || []).length,
+              }}
+              onTap={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item), from: 'match' } })}
+            />
+          </View>
         ))}
-        {displayMatches.length > 0 && (
+        {displayMatches.length > 0 && !exactOnly && (
           <TouchableOpacity style={styles.showMoreBtn} onPress={handleShowMore} disabled={loadingMore}>
             <Text style={styles.showMoreText}>
               {loadingMore ? 'Loading…' : 'Show more'}
             </Text>
           </TouchableOpacity>
         )}
+        {exactOnly && (
+          <TouchableOpacity style={styles.claudeMoreBtn} onPress={generateClaudeRecipes} disabled={generating}>
+            <Sparkles size={14} color={colors.tc600} />
+            <Text style={styles.claudeMoreText}>
+              {generating ? 'Chef Claude is cooking…' : 'Get more Chef Claude recipes'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
+
+      {generating && (
+        <View style={styles.cookingOverlay}>
+          <View style={styles.cookingCard}>
+            <ActivityIndicator size="large" color={colors.tc600} />
+            <Text style={styles.cookingTitle}>Chef Claude is cooking…</Text>
+            <Text style={styles.cookingSubtitle}>Generating fresh recipes using only your ingredients</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -156,6 +226,14 @@ const styles = StyleSheet.create({
   list: { paddingHorizontal: spacing.lg, paddingBottom: 48 },
   showMoreBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center', marginTop: spacing.md, marginBottom: spacing.xl },
   showMoreText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
+  claudeMoreBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, backgroundColor: colors.tc50, borderRadius: radius.pill, paddingVertical: 14, marginTop: spacing.md, marginBottom: spacing.xl, borderWidth: 1, borderColor: colors.tc100 },
+  claudeMoreText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.tc600 },
+  claudeBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 4, backgroundColor: colors.tc50, borderRadius: radius.pill, alignSelf: 'flex-start', marginBottom: 4, marginLeft: 4, borderWidth: 1, borderColor: colors.tc100 },
+  claudeBadgeText: { fontFamily: 'Inter', fontSize: 11, fontWeight: '600', color: colors.tc600 },
+  cookingOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(42,31,23,0.4)', justifyContent: 'center', alignItems: 'center', zIndex: 100 },
+  cookingCard: { backgroundColor: colors.paper, borderRadius: radius.lg, padding: spacing.xxl, alignItems: 'center', maxWidth: 300, gap: spacing.md },
+  cookingTitle: { ...typography.h3, color: colors.ink, textAlign: 'center' },
+  cookingSubtitle: { ...typography.body, color: colors.inkSoft, textAlign: 'center', lineHeight: 20 },
   exhausted: { flex: 1, backgroundColor: colors.cream, paddingTop: 56 },
   exhaustedContent: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxl },
   exhaustedIcon: { width: 88, height: 88, borderRadius: 44, backgroundColor: colors.creamDeep, alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
