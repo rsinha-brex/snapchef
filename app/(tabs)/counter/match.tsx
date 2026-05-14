@@ -85,9 +85,9 @@ export default function MatchScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+      <TouchableOpacity style={styles.backBtn} onPress={() => router.push('/(tabs)/counter')}>
         <ChevronLeft size={18} color={colors.ink} />
-        <Text style={styles.backBtnText}>Counter</Text>
+        <Text style={styles.backBtnText}>Back</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
         <AccentHeader prefix={`${matches.length} recipes`} accent="for you" sub={`Using ${items.length} of your ingredients`} />
