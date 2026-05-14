@@ -1,48 +1,36 @@
 import { requireAuth, handleAuthError } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { pantryItems } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { supabase } from '@/lib/supabase';
 
-export async function PATCH(request: Request, { id }: { id: string }) {
+export async function DELETE(request: Request, { id }: { id: string }) {
   try {
     const { userId } = await requireAuth(request);
-    const body = await request.json();
+    const { error } = await supabase
+      .from('pantry_items')
+      .delete()
+      .eq('user_id', userId)
+      .eq('id', id);
 
-    const [existing] = await db.select().from(pantryItems)
-      .where(and(eq(pantryItems.id, id), eq(pantryItems.userId, userId)))
-      .limit(1);
-
-    if (!existing) {
-      return Response.json({ error: 'Not found' }, { status: 404 });
-    }
-
-    const [updated] = await db.update(pantryItems)
-      .set(body)
-      .where(and(eq(pantryItems.id, id), eq(pantryItems.userId, userId)))
-      .returning();
-
-    return Response.json({ item: updated });
+    if (error) throw error;
+    return new Response(null, { status: 204 });
   } catch (error) {
     return handleAuthError(error);
   }
 }
 
-export async function DELETE(request: Request, { id }: { id: string }) {
+export async function PATCH(request: Request, { id }: { id: string }) {
   try {
     const { userId } = await requireAuth(request);
+    const body = await request.json();
+    const { data, error } = await supabase
+      .from('pantry_items')
+      .update(body)
+      .eq('user_id', userId)
+      .eq('id', id)
+      .select()
+      .single();
 
-    const [existing] = await db.select().from(pantryItems)
-      .where(and(eq(pantryItems.id, id), eq(pantryItems.userId, userId)))
-      .limit(1);
-
-    if (!existing) {
-      return Response.json({ error: 'Not found' }, { status: 404 });
-    }
-
-    await db.delete(pantryItems)
-      .where(and(eq(pantryItems.id, id), eq(pantryItems.userId, userId)));
-
-    return new Response(null, { status: 204 });
+    if (error) throw error;
+    return Response.json({ item: data });
   } catch (error) {
     return handleAuthError(error);
   }

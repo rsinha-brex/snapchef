@@ -1,23 +1,26 @@
 import { requireAuth, handleAuthError } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { savedRecipes } from '@/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: Request) {
   try {
     const { userId } = await requireAuth(request);
-    const url = new URL(request.url);
-    const cookedFilter = url.searchParams.get('cooked');
+    const { data, error } = await supabase
+      .from('saved_recipes')
+      .select('*')
+      .eq('user_id', userId)
+      .order('saved_at', { ascending: false });
 
-    let query = db.select().from(savedRecipes).where(eq(savedRecipes.userId, userId));
-
-    if (cookedFilter === 'true') {
-      query = db.select().from(savedRecipes).where(and(eq(savedRecipes.userId, userId), eq(savedRecipes.cooked, true)));
-    } else if (cookedFilter === 'false') {
-      query = db.select().from(savedRecipes).where(and(eq(savedRecipes.userId, userId), eq(savedRecipes.cooked, false)));
-    }
-
-    const saved = await query.orderBy(desc(savedRecipes.savedAt));
+    if (error) throw error;
+    const saved = (data || []).map((r: any) => ({
+      id: r.id,
+      userId: r.user_id,
+      recipeId: r.recipe_id,
+      recipeTitle: r.recipe_title,
+      recipeImage: r.recipe_image,
+      cooked: r.cooked,
+      savedAt: r.saved_at,
+      cookedAt: r.cooked_at,
+    }));
     return Response.json({ saved });
   } catch (error) {
     return handleAuthError(error);
@@ -33,22 +36,30 @@ export async function POST(request: Request) {
       return Response.json({ error: 'recipeId and title required' }, { status: 400 });
     }
 
-    const existing = await db.select().from(savedRecipes)
-      .where(and(eq(savedRecipes.userId, userId), eq(savedRecipes.recipeId, recipeId)))
+    const { data: existing } = await supabase
+      .from('saved_recipes')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('recipe_id', recipeId)
       .limit(1);
 
-    if (existing.length > 0) {
+    if (existing && existing.length > 0) {
       return Response.json({ saved: existing[0] });
     }
 
-    const [saved] = await db.insert(savedRecipes).values({
-      userId,
-      recipeId,
-      recipeTitle: title,
-      recipeImage: image,
-    }).returning();
+    const { data, error } = await supabase
+      .from('saved_recipes')
+      .insert({
+        user_id: userId,
+        recipe_id: recipeId,
+        recipe_title: title,
+        recipe_image: image || null,
+      })
+      .select()
+      .single();
 
-    return Response.json({ saved }, { status: 201 });
+    if (error) throw error;
+    return Response.json({ saved: data }, { status: 201 });
   } catch (error) {
     return handleAuthError(error);
   }
@@ -64,9 +75,13 @@ export async function DELETE(request: Request) {
       return Response.json({ error: 'recipeId required' }, { status: 400 });
     }
 
-    await db.delete(savedRecipes)
-      .where(and(eq(savedRecipes.userId, userId), eq(savedRecipes.recipeId, recipeId)));
+    const { error } = await supabase
+      .from('saved_recipes')
+      .delete()
+      .eq('user_id', userId)
+      .eq('recipe_id', recipeId);
 
+    if (error) throw error;
     return new Response(null, { status: 204 });
   } catch (error) {
     return handleAuthError(error);

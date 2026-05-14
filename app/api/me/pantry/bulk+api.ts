@@ -1,7 +1,5 @@
 import { requireAuth, handleAuthError } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { pantryItems } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { supabase } from '@/lib/supabase';
 import { pantryBulkSchema } from '@/lib/schemas';
 
 export async function POST(request: Request) {
@@ -19,23 +17,34 @@ export async function POST(request: Request) {
 
     for (const item of parsed.data.items) {
       const normalized = item.name.toLowerCase().trim();
-      const existing = await db.select().from(pantryItems)
-        .where(and(eq(pantryItems.userId, userId), eq(pantryItems.name, normalized)))
+      const { data: existing } = await supabase
+        .from('pantry_items')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('name', normalized)
         .limit(1);
 
-      if (existing.length > 0) {
+      if (existing && existing.length > 0) {
         skipped.push({ name: normalized, reason: 'duplicate' });
         continue;
       }
 
-      const [inserted] = await db.insert(pantryItems).values({
-        userId,
-        name: normalized,
-        category: item.category,
-        source: item.source,
-        photoRef: item.photoRef,
-      }).returning();
+      const { data: inserted, error } = await supabase
+        .from('pantry_items')
+        .insert({
+          user_id: userId,
+          name: normalized,
+          category: item.category || null,
+          source: item.source || null,
+          photo_ref: item.photoRef || null,
+        })
+        .select()
+        .single();
 
+      if (error) {
+        skipped.push({ name: normalized, reason: error.message });
+        continue;
+      }
       added.push(inserted);
     }
 

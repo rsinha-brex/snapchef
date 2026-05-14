@@ -84,6 +84,11 @@ export default function MatchScreen() {
   }
 
   async function handleShowMore() {
+    if (exactOnly) {
+      await generateClaudeRecipes();
+      setVisible(v => v + BATCH);
+      return;
+    }
     const nextVisible = visible + BATCH;
     setVisible(nextVisible);
     if (nextVisible > allMatches.length) {
@@ -177,18 +182,15 @@ export default function MatchScreen() {
             />
           </View>
         ))}
-        {displayMatches.length > 0 && !exactOnly && (
-          <TouchableOpacity style={styles.showMoreBtn} onPress={handleShowMore} disabled={loadingMore}>
-            <Text style={styles.showMoreText}>
-              {loadingMore ? 'Loading…' : 'Show more'}
-            </Text>
-          </TouchableOpacity>
-        )}
-        {exactOnly && (
-          <TouchableOpacity style={styles.claudeMoreBtn} onPress={generateClaudeRecipes} disabled={generating}>
-            <Sparkles size={14} color={colors.tc600} />
-            <Text style={styles.claudeMoreText}>
-              {generating ? 'Chef Claude is cooking…' : 'Get more Chef Claude recipes'}
+        {displayMatches.length > 0 && (
+          <TouchableOpacity
+            style={exactOnly ? styles.claudeMoreBtn : styles.showMoreBtn}
+            onPress={handleShowMore}
+            disabled={loadingMore || generating}
+          >
+            {exactOnly && <Sparkles size={14} color={colors.tc600} />}
+            <Text style={exactOnly ? styles.claudeMoreText : styles.showMoreText}>
+              {generating ? 'Chef Claude is cooking…' : loadingMore ? 'Loading…' : exactOnly ? 'Get more Chef Claude recipes' : 'Show more'}
             </Text>
           </TouchableOpacity>
         )}
