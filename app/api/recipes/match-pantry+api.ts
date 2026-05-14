@@ -1,6 +1,7 @@
 import { algolia, RECIPE_INDEX } from '@/lib/algolia';
 
 const STAPLES = new Set(['salt', 'pepper', 'black pepper', 'oil', 'olive oil', 'water', 'sugar', 'flour', 'butter']);
+const RETRIEVE = ['id', 'title', 'cuisine', 'total_time_minutes', 'difficulty', 'ingredient_names', 'ingredients', 'instructions', 'servings', 'meal_type', 'dietary', 'image_url'];
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -13,38 +14,51 @@ export async function GET(request: Request) {
   }
 
   const ingredientList = ingredients.toLowerCase().split(',').map(i => i.trim()).filter(Boolean);
-  const seenIds = seen ? seen.split(',').map(id => id.trim()) : [];
-  const notFilter = seenIds.length > 0
-    ? seenIds.map(id => `NOT objectID:${id}`).join(' AND ')
+  const seenIds = new Set(seen ? seen.split(',').map(id => id.trim()) : []);
+  const notFilter = seenIds.size > 0
+    ? [...seenIds].map(id => `NOT objectID:${id}`).join(' AND ')
     : '';
 
   const nonStaples = ingredientList.filter(i => !STAPLES.has(i));
-  const searchTerms = (nonStaples.length > 0 ? nonStaples : ingredientList).slice(0, 4);
+  const searchPool = nonStaples.length > 0 ? nonStaples : ingredientList;
+
+  // Run multiple searches with different ingredient combos for broader results
+  const queries: string[] = [];
+  if (searchPool.length >= 2) queries.push(searchPool.slice(0, 2).join(' '));
+  if (searchPool.length >= 4) queries.push(searchPool.slice(2, 4).join(' '));
+  if (searchPool.length >= 1) queries.push(searchPool[0]);
+  if (searchPool.length >= 3) queries.push(searchPool.slice(0, 3).join(' '));
+  if (searchPool.length >= 5) queries.push(searchPool.slice(3, 6).join(' '));
+  // Always add a broad single-ingredient search as fallback
+  for (const term of searchPool.slice(0, 3)) {
+    queries.push(term);
+  }
 
   try {
-    let result = await algolia.searchSingleIndex({
-      indexName: RECIPE_INDEX,
-      searchParams: {
-        query: searchTerms.join(' '),
-        filters: notFilter,
-        hitsPerPage: 40,
-        attributesToRetrieve: ['id', 'title', 'cuisine', 'total_time_minutes', 'difficulty', 'ingredient_names', 'ingredients', 'instructions', 'servings', 'meal_type', 'dietary', 'image_url'],
-      },
-    });
+    const allHits: any[] = [];
+    const hitIds = new Set<string>();
 
-    if (result.hits.length === 0 && searchTerms.length > 3) {
-      result = await algolia.searchSingleIndex({
+    for (const q of queries) {
+      if (allHits.length >= limit) break;
+      const result = await algolia.searchSingleIndex({
         indexName: RECIPE_INDEX,
         searchParams: {
-          query: searchTerms.slice(0, 3).join(' '),
+          query: q,
           filters: notFilter,
-          hitsPerPage: 40,
-          attributesToRetrieve: ['id', 'title', 'cuisine', 'total_time_minutes', 'difficulty', 'ingredient_names', 'ingredients', 'instructions', 'servings', 'meal_type', 'dietary', 'image_url'],
+          hitsPerPage: 20,
+          attributesToRetrieve: RETRIEVE,
         },
       });
+      for (const hit of result.hits as any[]) {
+        const id = String(hit.objectID || hit.id);
+        if (!hitIds.has(id) && !seenIds.has(id)) {
+          hitIds.add(id);
+          allHits.push(hit);
+        }
+      }
     }
 
-    const recipes = result.hits.map((hit: any) => {
+    const recipes = allHits.map((hit: any) => {
       const recipeIngredients: string[] = hit.ingredient_names || [];
       const matched = recipeIngredients.filter(ri => ingredientList.some(ui => ri.includes(ui) || ui.includes(ri)));
       const missed = recipeIngredients.filter(ri => !ingredientList.some(ui => ri.includes(ui) || ui.includes(ri)));
