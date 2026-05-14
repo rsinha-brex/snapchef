@@ -12,10 +12,22 @@ https://drnohan-snapchef.expo.app
 1. Download Expo Go:
    - [iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
    - [Android (Play Store)](https://play.google.com/store/apps/details?id=host.exp.exponent)
-2. Open the app in Expo Go:
-   - **Tap this link on your phone:** [Open snapchef in Expo Go](https://expo.dev/preview/update?message=v3.6%20-%20chef%20claude%20recipes&updateRuntimeVersion=1.0.0&createdAt=2026-05-14T07%3A55%3A00Z&slug=snapchef&projectId=b30d54c4-fa64-450b-856a-ea3af39ef924&group=b578a860-6db3-4b08-b6bf-315209487086)
-   - Or scan a QR code from the project page: https://expo.dev/accounts/drnohan/projects/snapchef
-   - Or in Expo Go, search for `@drnohan/snapchef` under the Profile tab
+
+2. Open the app — three ways:
+
+   **a. Scan the QR code** (open this README on your laptop, scan with phone camera on iOS or Expo Go's "Scan QR" on Android):
+
+   ![QR code for snapchef in Expo Go](./docs/expo-qr.png)
+
+   **b. Tap this link on your phone** (deep-links into Expo Go):
+   `exp://u.expo.dev/b30d54c4-fa64-450b-856a-ea3af39ef924?channel-name=production`
+
+   **c. Or open this in any browser** to see the QR + project page:
+   https://expo.dev/accounts/drnohan/projects/snapchef/updates/8d9aa2b4-1a83-4d68-be2e-e01d4cf27ebe
+
+   **d. Or search inside Expo Go** — open the app, tap Profile, search `@drnohan/snapchef`
+
+> First load takes ~10–15 seconds while the bundle downloads. After that it's instant.
 
 ## Features
 
