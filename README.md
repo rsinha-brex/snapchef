@@ -13,7 +13,9 @@ https://drnohan-snapchef.expo.app
    - [iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
    - [Android (Play Store)](https://play.google.com/store/apps/details?id=host.exp.exponent)
 2. Open the app in Expo Go:
-   - [Open in Expo Go](https://expo.dev/accounts/drnohan/projects/snapchef?channel=production)
+   - **Tap this link on your phone:** [Open snapchef in Expo Go](https://expo.dev/preview/update?message=v3.6%20-%20chef%20claude%20recipes&updateRuntimeVersion=1.0.0&createdAt=2026-05-14T07%3A55%3A00Z&slug=snapchef&projectId=b30d54c4-fa64-450b-856a-ea3af39ef924&group=b578a860-6db3-4b08-b6bf-315209487086)
+   - Or scan a QR code from the project page: https://expo.dev/accounts/drnohan/projects/snapchef
+   - Or in Expo Go, search for `@drnohan/snapchef` under the Profile tab
 
 ## Features
 
