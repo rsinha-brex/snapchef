@@ -2,10 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { useSignIn, useSSO } from '@clerk/clerk-expo';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useState } from 'react';
-import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-
-WebBrowser.maybeCompleteAuthSession();
 
 export default function SignInScreen() {
   const { signIn, setActive } = useSignIn();
@@ -16,21 +13,17 @@ export default function SignInScreen() {
     if (!signIn) return;
     setLoading(true);
     try {
-      if (Platform.OS === 'web') {
-        await signIn.authenticateWithRedirect({
-          strategy: 'oauth_google',
-          redirectUrl: '/sso-callback',
-          redirectUrlComplete: '/',
-        });
-      } else {
-        const redirectUrl = Linking.createURL('/oauth-callback');
-        const { createdSessionId } = await startSSOFlow({
-          strategy: 'oauth_google',
-          redirectUrl,
-        });
-        if (createdSessionId) {
-          await setActive!({ session: createdSessionId });
-        }
+      const redirectUrl = Platform.OS === 'web'
+        ? `${window.location.origin}/sso-callback`
+        : Linking.createURL('/sso-callback');
+
+      const { createdSessionId, setActive: setActiveSession } = await startSSOFlow({
+        strategy: 'oauth_google',
+        redirectUrl,
+      });
+
+      if (createdSessionId && setActiveSession) {
+        await setActiveSession({ session: createdSessionId });
       }
     } catch (error) {
       console.error('Google sign-in error:', error);
