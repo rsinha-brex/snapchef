@@ -22,11 +22,78 @@ export default function MatchScreen() {
   const [exactOnly, setExactOnly] = useState(false);
   const [visible, setVisible] = useState(10);
   const [seen, setSeen] = useState<string[]>([]);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const BATCH = 10;
 
   useEffect(() => {
     fetchMatches(true);
+    if (isSignedIn) loadSavedIds();
   }, []);
+
+  async function loadSavedIds() {
+    try {
+      const token = await getToken();
+      const resp = await fetch(`${API_BASE}/api/me/recipes/saved`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await resp.json();
+      setSavedIds(new Set((data.saved || []).map((s: any) => String(s.recipeId))));
+    } catch {}
+  }
+
+  async function toggleSave(recipe: any) {
+    if (!isSignedIn) return;
+    const idStr = String(recipe.objectID || recipe.id);
+
+    // Chef Claude recipes go to adaptations
+    if (recipe.isClaudeGenerated) {
+      const isSaved = savedIds.has(idStr);
+      setSavedIds(prev => {
+        const next = new Set(prev);
+        if (isSaved) next.delete(idStr); else next.add(idStr);
+        return next;
+      });
+      if (!isSaved) {
+        try {
+          const token = await getToken();
+          await fetch(`${API_BASE}/api/me/adaptations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+              recipeId: Math.floor(Math.random() * 1000000000),
+              recipeTitle: 'Chef Claude: ' + recipe.title,
+              adaptedPayload: { adapted: recipe, viability: 'good', adaptations: [], isClaudeGenerated: true },
+            }),
+          });
+        } catch (e) { console.error('Save Claude failed:', e); }
+      }
+      return;
+    }
+
+    const recipeIdNum = parseInt(idStr);
+    if (!recipeIdNum) return;
+    const isSaved = savedIds.has(idStr);
+    setSavedIds(prev => {
+      const next = new Set(prev);
+      if (isSaved) next.delete(idStr); else next.add(idStr);
+      return next;
+    });
+    try {
+      const token = await getToken();
+      if (isSaved) {
+        await fetch(`${API_BASE}/api/me/recipes/saved?recipeId=${recipeIdNum}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        await fetch(`${API_BASE}/api/me/recipes/saved`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ recipeId: recipeIdNum, title: recipe.title, image: recipe.image_url }),
+        });
+      }
+    } catch (e) { console.error('Toggle save failed:', e); }
+  }
 
   async function fetchMatches(initial = false) {
     if (initial) setLoading(true);
@@ -179,6 +246,8 @@ export default function MatchScreen() {
                 usedCount: item.usedCount || 0,
                 totalCount: (item.ingredient_names || []).length,
               }}
+              isSaved={savedIds.has(String(item.objectID || item.id))}
+              onHeart={() => toggleSave(item)}
               onTap={() => item.isClaudeGenerated
                 ? openClaudeRecipe(item)
                 : router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item), from: 'match' } })}
