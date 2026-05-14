@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { useSignIn, useSSO } from '@clerk/clerk-expo';
+import { useSignIn, useSSO, useClerk } from '@clerk/clerk-expo';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useState } from 'react';
 import * as Linking from 'expo-linking';
@@ -7,16 +7,19 @@ import * as Linking from 'expo-linking';
 export default function SignInScreen() {
   const { signIn, setActive } = useSignIn();
   const { startSSOFlow } = useSSO();
+  const clerk = useClerk();
   const [loading, setLoading] = useState(false);
 
   async function handleGoogleSignIn() {
     if (!signIn) return;
     setLoading(true);
     try {
-      const redirectUrl = Platform.OS === 'web'
-        ? `${window.location.origin}/sso-callback`
-        : Linking.createURL('/sso-callback');
+      if (Platform.OS === 'web') {
+        clerk.redirectToSignIn({ redirectUrl: window.location.origin + '/' });
+        return;
+      }
 
+      const redirectUrl = Linking.createURL('/sso-callback');
       const { createdSessionId, setActive: setActiveSession } = await startSSOFlow({
         strategy: 'oauth_google',
         redirectUrl,
