@@ -7,6 +7,7 @@ import { MOCK_PANTRY } from '@/lib/mock-data';
 import { useState, useEffect } from 'react';
 import type { AdaptResponse } from '@/lib/schemas';
 import { useCounterStore } from '@/stores/counter';
+import { useAuth } from '@clerk/clerk-expo';
 
 type ViewMode = 'original' | 'adapted' | 'not_viable';
 
@@ -14,11 +15,14 @@ export default function RecipeDetailScreen() {
   const router = useRouter();
   const { id, recipe: recipeParam } = useLocalSearchParams<{ id: string; recipe?: string }>();
   const { items: counterItems } = useCounterStore();
+  const { getToken, isSignedIn } = useAuth();
   const [recipe, setRecipe] = useState<any | null>(recipeParam ? JSON.parse(recipeParam) : null);
   const [loading, setLoading] = useState(!recipeParam);
   const [viewMode, setViewMode] = useState<ViewMode>('original');
   const [adapting, setAdapting] = useState(false);
   const [adaptResult, setAdaptResult] = useState<AdaptResponse | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!recipe && id) {

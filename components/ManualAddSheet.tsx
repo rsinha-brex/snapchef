@@ -87,9 +87,12 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
   if (!visible) return null;
 
   return (
-    <View style={styles.overlay}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.overlay}
+      pointerEvents="box-none"
+    >
       <Pressable style={styles.backdrop} onPress={onClose} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.sheetWrapper}>
       <View style={styles.sheet}>
         <View style={styles.header}>
           <Text style={styles.title}>Add ingredients</Text>
@@ -148,15 +151,13 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
           </View>
         )}
       </View>
-      </KeyboardAvoidingView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'flex-end', zIndex: 100 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(42,31,23,0.3)' },
-  sheetWrapper: { justifyContent: 'flex-end' },
   sheet: { backgroundColor: colors.paper, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, padding: spacing.xl, paddingBottom: 48, maxHeight: '80%' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
   title: { ...typography.h3, color: colors.ink },
