@@ -1,0 +1,188 @@
+{
+  "runId": "2026-05-14T04-39-07",
+  "total": 30,
+  "passed": 29,
+  "failed": 1,
+  "results": [
+    {
+      "id": 101,
+      "name": "cuisine: italian",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 102,
+      "name": "cuisine: mexican",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 103,
+      "name": "cuisine: american",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 104,
+      "name": "cuisine: french",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 105,
+      "name": "cuisine: japanese",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 106,
+      "name": "time: <15min",
+      "status": "pass",
+      "detail": "10 results"
+    },
+    {
+      "id": 107,
+      "name": "time: <30min",
+      "status": "pass",
+      "detail": "10 results"
+    },
+    {
+      "id": 108,
+      "name": "time: <60min",
+      "status": "pass",
+      "detail": "10 results"
+    },
+    {
+      "id": 109,
+      "name": "time filter variant 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 110,
+      "name": "time filter variant 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 111,
+      "name": "italian + <30min",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 112,
+      "name": "easy + vegetarian",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 113,
+      "name": "mexican + easy",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 114,
+      "name": "<60min + medium",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 115,
+      "name": "american + <30min",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 116,
+      "name": "AI: \"quick weeknight dinner\"",
+      "status": "pass",
+      "detail": "3 results"
+    },
+    {
+      "id": 117,
+      "name": "AI: \"comfort food for cold weather\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 118,
+      "name": "AI: \"healthy lunch ideas\"",
+      "status": "pass",
+      "detail": "10 results"
+    },
+    {
+      "id": 119,
+      "name": "AI: \"impressive date night recipe\"",
+      "status": "fail",
+      "detail": "no results"
+    },
+    {
+      "id": 120,
+      "name": "AI: \"easy meals for kids\"",
+      "status": "pass",
+      "detail": "1 results"
+    },
+    {
+      "id": 121,
+      "name": "text search: \"pasta\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 122,
+      "name": "text search: \"soup\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 123,
+      "name": "text search: \"salad\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 124,
+      "name": "text search: \"cake\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 125,
+      "name": "text search: \"stir fry\"",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 126,
+      "name": "edge: empty query",
+      "status": "pass",
+      "detail": "status 200"
+    },
+    {
+      "id": 127,
+      "name": "edge: 1 char",
+      "status": "pass",
+      "detail": "status 200"
+    },
+    {
+      "id": 128,
+      "name": "edge: gibberish",
+      "status": "pass",
+      "detail": "status 200"
+    },
+    {
+      "id": 129,
+      "name": "edge: emoji",
+      "status": "pass",
+      "detail": "status 200"
+    },
+    {
+      "id": 130,
+      "name": "edge: SQL injection",
+      "status": "pass",
+      "detail": "status 200"
+    }
+  ]
+}

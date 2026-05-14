@@ -1,0 +1,117 @@
+{
+  "runId": "2026-05-14T02-52-24",
+  "suite": "app-flows",
+  "total": 27,
+  "passed": 24,
+  "failed": 3,
+  "results": [
+    {
+      "label": "Empty counter state renders",
+      "status": "pass"
+    },
+    {
+      "label": "Pantry count shown",
+      "status": "pass"
+    },
+    {
+      "label": "ManualAddSheet opens",
+      "status": "pass"
+    },
+    {
+      "label": "Items added to counter",
+      "status": "fail"
+    },
+    {
+      "label": "Counter shows correct count",
+      "status": "fail"
+    },
+    {
+      "label": "Match screen loads",
+      "status": "fail"
+    },
+    {
+      "label": "Clear all resets to empty",
+      "status": "pass"
+    },
+    {
+      "label": "Pantry page renders",
+      "status": "pass"
+    },
+    {
+      "label": "Categories grouped",
+      "status": "pass"
+    },
+    {
+      "label": "Items visible",
+      "status": "pass"
+    },
+    {
+      "label": "Edit mode active (shows Done)",
+      "status": "pass"
+    },
+    {
+      "label": "Exit edit mode (shows Edit)",
+      "status": "pass"
+    },
+    {
+      "label": "Greeting renders",
+      "status": "pass"
+    },
+    {
+      "label": "Filters button visible",
+      "status": "pass"
+    },
+    {
+      "label": "AI Search toggle visible",
+      "status": "pass"
+    },
+    {
+      "label": "Result count shown",
+      "status": "pass"
+    },
+    {
+      "label": "Filter sheet opens",
+      "status": "pass"
+    },
+    {
+      "label": "Tab /recipes loads content",
+      "status": "pass"
+    },
+    {
+      "label": "Tab /counter loads content",
+      "status": "pass"
+    },
+    {
+      "label": "Tab /pantry loads content",
+      "status": "pass"
+    },
+    {
+      "label": "Tab /saved loads content",
+      "status": "pass"
+    },
+    {
+      "label": "Deep link recipe detail has Back button",
+      "status": "pass"
+    },
+    {
+      "label": "No-instructions fallback shows",
+      "status": "pass"
+    },
+    {
+      "label": "Zero time renders",
+      "status": "pass"
+    },
+    {
+      "label": "Long title renders",
+      "status": "pass"
+    },
+    {
+      "label": "25 ingredients all render",
+      "status": "pass"
+    },
+    {
+      "label": "Instructions render",
+      "status": "pass"
+    }
+  ]
+}
