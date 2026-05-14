@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronLeft, Heart, Sparkles } from 'lucide-react-native';
@@ -27,7 +28,7 @@ export default function RecipeDetailScreen() {
 
   async function fetchRecipe() {
     try {
-      const response = await fetch(`/api/recipes/${id}`);
+      const response = await fetch(`${API_BASE}/api/recipes/${id}`);
       const data = await response.json();
       setRecipe(data.recipe || data);
     } catch (error) {
@@ -80,7 +81,7 @@ export default function RecipeDetailScreen() {
         instructions,
         servings,
       };
-      const response = await fetch('/api/recipes/adapt', {
+      const response = await fetch(API_BASE + '/api/recipes/adapt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipe: recipePayload, available }),

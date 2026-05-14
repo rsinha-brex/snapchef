@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
@@ -24,7 +25,7 @@ export default function MatchScreen() {
     setLoading(true);
     try {
       const ingredients = items.map(i => i.name).join(',');
-      const response = await fetch(`/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20`);
+      const response = await fetch(`${API_BASE}/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20`);
       const data = await response.json();
       setAllMatches(data.recipes || []);
     } catch (error) {

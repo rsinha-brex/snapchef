@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
 import { useState, useCallback, useRef } from 'react';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
@@ -45,7 +46,7 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(async () => {
       try {
-        const resp = await fetch(`/api/ingredients/autocomplete?query=${encodeURIComponent(text)}&limit=10`);
+        const resp = await fetch(`${API_BASE}/api/ingredients/autocomplete?query=${encodeURIComponent(text)}&limit=10`);
         if (resp.ok) {
           const data = await resp.json();
           if (data.suggestions && data.suggestions.length > 0) {

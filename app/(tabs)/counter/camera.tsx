@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
@@ -24,7 +25,7 @@ export default function CameraScreen() {
     setState('processing');
     setError(null);
     try {
-      const response = await fetch('/api/vision/detect', {
+      const response = await fetch(API_BASE + '/api/vision/detect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: base64 }),
@@ -39,7 +40,7 @@ export default function CameraScreen() {
         return;
       }
 
-      const normalizeResp = await fetch('/api/ingredients/normalize', {
+      const normalizeResp = await fetch(API_BASE + '/api/ingredients/normalize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ingredients: data.items }),

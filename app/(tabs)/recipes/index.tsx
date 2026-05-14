@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, TextInput, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
@@ -68,7 +69,7 @@ export default function RecipesScreen() {
       if (difficulty) params.set('difficulty', difficulty);
       if (diet) params.set('diet', diet);
       params.set('number', '20');
-      const response = await fetch(`/api/recipes/search?${params.toString()}`);
+      const response = await fetch(`${API_BASE}/api/recipes/search?${params.toString()}`);
       const data = await response.json();
       setRecipes(data.recipes || []);
       setTotalResults(data.totalResults || 0);
@@ -86,7 +87,7 @@ export default function RecipesScreen() {
     }
     setAiSearching(true);
     try {
-      const response = await fetch('/api/recipes/ai-search', {
+      const response = await fetch(API_BASE + '/api/recipes/ai-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query.trim() }),

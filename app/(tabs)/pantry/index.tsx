@@ -1,3 +1,4 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Search, Minus, BookOpen } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
@@ -48,7 +49,7 @@ export default function PantryScreen() {
     (async () => {
       try {
         const token = await getToken();
-        const resp = await fetch('/api/me/pantry', {
+        const resp = await fetch(API_BASE + '/api/me/pantry', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await resp.json();
@@ -73,7 +74,7 @@ export default function PantryScreen() {
     }
     try {
       const token = await getToken();
-      const resp = await fetch('/api/me/pantry', {
+      const resp = await fetch(API_BASE + '/api/me/pantry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name: item.name, category: item.category, source: 'manual' }),
@@ -95,7 +96,7 @@ export default function PantryScreen() {
     if (!isSignedIn || id.startsWith('mock-') || id.startsWith('local-')) return;
     try {
       const token = await getToken();
-      await fetch(`/api/me/pantry/${id}`, {
+      await fetch(`${API_BASE}/api/me/pantry/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -116,7 +117,7 @@ export default function PantryScreen() {
     }
     try {
       const token = await getToken();
-      const resp = await fetch('/api/me/pantry/bulk', {
+      const resp = await fetch(API_BASE + '/api/me/pantry/bulk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ items: newItems }),
