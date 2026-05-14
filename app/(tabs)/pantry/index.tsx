@@ -152,11 +152,15 @@ export default function PantryScreen() {
           <Text style={styles.emptyTitle}>Stock your kitchen</Text>
           <Text style={styles.emptySubtitle}>Add what you've got and we'll match it to recipes as you browse.</Text>
           <View style={styles.emptyCtas}>
-            <TouchableOpacity style={styles.stockBtn} onPress={handleStockBasics}>
-              <Text style={styles.stockBtnText}>+ Stock the basics · 10 items</Text>
+            <TouchableOpacity style={styles.primaryBtn} onPress={() => setShowAdd(true)}>
+              <Text style={styles.primaryBtnText}>Add items manually</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.secondaryBtn} onPress={handleStockBasics}>
+              <Text style={styles.secondaryBtnText}>+ Stock the basics · 10 items</Text>
             </TouchableOpacity>
           </View>
         </View>
+        <ManualAddSheet visible={showAdd} onClose={() => setShowAdd(false)} onAdd={handleAdd} />
       </View>
     );
   }
@@ -232,9 +236,11 @@ const styles = StyleSheet.create({
   iconCircle: { width: 88, height: 88, borderRadius: 44, backgroundColor: colors.creamDeep, alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
   emptyTitle: { ...typography.h2, color: colors.ink, textAlign: 'center', marginBottom: spacing.sm },
   emptySubtitle: { ...typography.body, color: colors.inkSoft, textAlign: 'center', marginBottom: spacing.xl, maxWidth: 260 },
-  emptyCtas: { width: '100%', maxWidth: 280 },
-  stockBtn: { backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 16, alignItems: 'center' },
-  stockBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
+  emptyCtas: { width: '100%', maxWidth: 280, gap: 12 },
+  primaryBtn: { backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 16, alignItems: 'center' },
+  primaryBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
+  secondaryBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 16, alignItems: 'center' },
+  secondaryBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
   list: { paddingHorizontal: spacing.lg, paddingBottom: 100 },
   categorySection: { marginBottom: 18 },
   catHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },

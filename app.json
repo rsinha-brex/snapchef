@@ -28,15 +28,7 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#FBF5EC"
-        }
-      ],
-      "expo-image",
       "expo-secure-store",
-      "expo-font",
       [
         "expo-image-picker",
         {
