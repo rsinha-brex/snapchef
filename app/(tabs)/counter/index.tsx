@@ -41,7 +41,7 @@ export default function CounterScreen() {
           </View>
         </View>
 
-        <ManualAddSheet visible={showManualAdd} onClose={() => setShowManualAdd(false)} />
+        <ManualAddSheet visible={showManualAdd} onClose={() => setShowManualAdd(false)} showCameraButton />
         <PantryPullSheet visible={showPantryPull} onClose={() => setShowPantryPull(false)} />
       </View>
     );
@@ -82,7 +82,7 @@ export default function CounterScreen() {
         </TouchableOpacity>
       </View>
 
-      <ManualAddSheet visible={showManualAdd} onClose={() => setShowManualAdd(false)} />
+      <ManualAddSheet visible={showManualAdd} onClose={() => setShowManualAdd(false)} showCameraButton />
     </View>
   );
 }

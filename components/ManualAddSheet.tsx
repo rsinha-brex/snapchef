@@ -1,6 +1,8 @@
 import { API_BASE } from '@/lib/api';
-import { View, Text, TextInput, TouchableOpacity, Pressable, StyleSheet, Keyboard, Platform } from 'react-native';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Pressable, ScrollView, StyleSheet, Platform } from 'react-native';
+import { useState, useCallback, useRef } from 'react';
+import { useRouter } from 'expo-router';
+import { Camera, X } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useCounterStore } from '@/stores/counter';
 import ingredients from '@/data/canonical-ingredients.json';
@@ -24,21 +26,12 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   onAdd?: (item: { name: string; category?: string }) => void;
+  showCameraButton?: boolean;
 }
 
-export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
+export default function ManualAddSheet({ visible, onClose, onAdd, showCameraButton = false }: Props) {
   const { addItem } = useCounterStore();
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', e => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-    const hideSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => {
-      setKeyboardHeight(0);
-    });
-    return () => { showSub.remove(); hideSub.remove(); };
-  }, []);
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<typeof ingredients>([]);
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,16 +88,21 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
     }
   }
 
+  function handleSwitchToCamera() {
+    onClose();
+    router.push('/(tabs)/counter/camera');
+  }
+
   if (!visible) return null;
 
   return (
     <View style={styles.overlay}>
       <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={[styles.sheet, { paddingBottom: keyboardHeight + 48 }]}>
+      <View style={styles.sheet}>
         <View style={styles.header}>
           <Text style={styles.title}>Add ingredients</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.doneBtn}>Done</Text>
+          <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+            <X size={20} color={colors.inkSoft} />
           </TouchableOpacity>
         </View>
 
@@ -116,61 +114,89 @@ export default function ManualAddSheet({ visible, onClose, onAdd }: Props) {
             value={query}
             onChangeText={handleSearch}
             autoFocus
+            returnKeyType="done"
+            onSubmitEditing={handleFreeText}
           />
         </View>
 
-        {suggestions.length > 0 && (
-          <View style={styles.suggestions}>
-            {suggestions.map((item: any) => (
-              <TouchableOpacity
-                key={item.name}
-                style={styles.suggestionRow}
-                onPress={() => handleAdd(item.name, item.category)}
-              >
-                <Text style={styles.suggestionName}>{item.name}</Text>
-                <Text style={styles.suggestionCategory}>{item.category}</Text>
-              </TouchableOpacity>
-            ))}
-            {query.length >= 2 && (
-              <TouchableOpacity style={styles.freeTextRow} onPress={handleFreeText}>
-                <Text style={styles.freeTextLabel}>Use exactly: "</Text>
-                <Text style={styles.freeTextValue}>{query}</Text>
-                <Text style={styles.freeTextLabel}>"</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+        {showCameraButton && (
+          <TouchableOpacity style={styles.cameraBtn} onPress={handleSwitchToCamera}>
+            <Camera size={16} color={colors.tc600} />
+            <Text style={styles.cameraBtnText}>Or use camera instead</Text>
+          </TouchableOpacity>
         )}
 
-        {suggestions.length === 0 && query.length === 0 && (
-          <View style={styles.quickAdd}>
-            <Text style={styles.quickAddLabel}>Quick add</Text>
-            <View style={styles.quickAddGrid}>
-              {QUICK_ADD.map(item => (
+        <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
+          {suggestions.length > 0 && (
+            <View style={styles.suggestions}>
+              {suggestions.map((item: any) => (
                 <TouchableOpacity
                   key={item.name}
-                  style={styles.quickAddChip}
+                  style={styles.suggestionRow}
                   onPress={() => handleAdd(item.name, item.category)}
                 >
-                  <Text style={styles.quickAddText}>{item.name}</Text>
+                  <Text style={styles.suggestionName}>{item.name}</Text>
+                  <Text style={styles.suggestionCategory}>{item.category}</Text>
                 </TouchableOpacity>
               ))}
+              {query.length >= 2 && (
+                <TouchableOpacity style={styles.freeTextRow} onPress={handleFreeText}>
+                  <Text style={styles.freeTextLabel}>Use exactly: "</Text>
+                  <Text style={styles.freeTextValue}>{query}</Text>
+                  <Text style={styles.freeTextLabel}>"</Text>
+                </TouchableOpacity>
+              )}
             </View>
-          </View>
-        )}
+          )}
+
+          {suggestions.length === 0 && query.length === 0 && (
+            <View style={styles.quickAdd}>
+              <Text style={styles.quickAddLabel}>Quick add</Text>
+              <View style={styles.quickAddGrid}>
+                {QUICK_ADD.map(item => (
+                  <TouchableOpacity
+                    key={item.name}
+                    style={styles.quickAddChip}
+                    onPress={() => handleAdd(item.name, item.category)}
+                  >
+                    <Text style={styles.quickAddText}>{item.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
+        </ScrollView>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'flex-end', zIndex: 100 },
+  overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 },
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(42,31,23,0.3)' },
-  sheet: { backgroundColor: colors.paper, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, padding: spacing.xl, maxHeight: '90%' },
+  sheet: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0,
+    backgroundColor: colors.paper,
+    borderBottomLeftRadius: radius.lg,
+    borderBottomRightRadius: radius.lg,
+    padding: spacing.xl,
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    maxHeight: '60%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+  },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
   title: { ...typography.h3, color: colors.ink },
-  doneBtn: { ...typography.body, color: colors.tc600, fontWeight: '600' },
-  searchRow: { marginBottom: spacing.lg },
+  closeBtn: { padding: 4 },
+  searchRow: { marginBottom: spacing.md },
   input: { backgroundColor: colors.cream, borderRadius: radius.md, paddingHorizontal: spacing.lg, paddingVertical: 14, fontSize: 15, color: colors.ink, borderWidth: 1, borderColor: colors.hairline },
+  cameraBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 10, marginBottom: spacing.md, backgroundColor: colors.tc50, borderRadius: radius.md, borderWidth: 1, borderColor: colors.tc100 },
+  cameraBtnText: { fontFamily: 'Inter', fontSize: 13, fontWeight: '500', color: colors.tc600 },
+  content: { flexGrow: 0 },
   suggestions: { marginBottom: spacing.lg },
   suggestionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, paddingHorizontal: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.hairline },
   suggestionName: { ...typography.body, color: colors.ink, textTransform: 'capitalize' },

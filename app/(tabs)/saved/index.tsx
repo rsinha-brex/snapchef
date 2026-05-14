@@ -1,30 +1,48 @@
+import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
-import { mockSavedRecipes, mockSavedAdaptations } from '@/lib/stubs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-expo';
 import AccentHeader from '@/components/AccentHeader';
 
 type SubTab = 'recipes' | 'adaptations';
-type Filter = 'all' | 'want_to_try' | 'cooked';
 
 export default function SavedScreen() {
   const router = useRouter();
+  const { getToken, isSignedIn } = useAuth();
   const [activeTab, setActiveTab] = useState<SubTab>('recipes');
-  const [filter, setFilter] = useState<Filter>('all');
-  const savedRecipes = mockSavedRecipes();
-  const savedAdaptations = mockSavedAdaptations();
+  const [savedRecipes, setSavedRecipes] = useState<any[]>([]);
+  const [savedAdaptations, setSavedAdaptations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredRecipes = filter === 'all' ? savedRecipes
-    : filter === 'cooked' ? savedRecipes.filter(r => r.cooked)
-    : savedRecipes.filter(r => !r.cooked);
+  useEffect(() => {
+    if (!isSignedIn) { setLoading(false); return; }
+    (async () => {
+      try {
+        const token = await getToken();
+        const [recipesResp, adaptationsResp] = await Promise.all([
+          fetch(`${API_BASE}/api/me/recipes/saved`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_BASE}/api/me/adaptations`, { headers: { Authorization: `Bearer ${token}` } }),
+        ]);
+        const recipesData = await recipesResp.json();
+        const adaptationsData = await adaptationsResp.json();
+        setSavedRecipes(recipesData.saved || []);
+        setSavedAdaptations(adaptationsData.adaptations || []);
+      } catch (e) {
+        console.error('Failed to load saved:', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [isSignedIn]);
 
   return (
     <View style={styles.container}>
       <AccentHeader
         prefix="Your"
         accent="saved"
-        sub={`${savedRecipes.length} recipes · ${savedAdaptations.length} adaptations`}
+        sub={`${savedRecipes.length} recipes · ${savedAdaptations.length} versions`}
       />
 
       <View style={styles.segmented}>
@@ -43,68 +61,53 @@ export default function SavedScreen() {
       </View>
 
       {activeTab === 'recipes' && (
-        <>
-          <View style={styles.filterRow}>
-            {(['all', 'want_to_try', 'cooked'] as Filter[]).map(f => (
-              <TouchableOpacity
-                key={f}
-                style={[styles.filterChip, filter === f && styles.filterChipActive]}
-                onPress={() => setFilter(f)}
-              >
-                <Text style={[styles.filterChipText, filter === f && styles.filterChipTextActive]}>
-                  {f === 'all' ? 'All' : f === 'want_to_try' ? 'Want to try' : 'Cooked'}
+        <FlatList
+          data={savedRecipes}
+          keyExtractor={item => String(item.id)}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.recipeId) } })}
+            >
+              {item.recipeImage && <Image source={{ uri: item.recipeImage }} style={styles.cardThumb} />}
+              <View style={styles.cardInfo}>
+                <Text style={styles.cardTitle} numberOfLines={2}>{item.recipeTitle}</Text>
+                <Text style={styles.cardMeta}>
+                  Saved {new Date(item.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <FlatList
-            data={filteredRecipes}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.list}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.card}>
-                {item.recipeImage && <Image source={{ uri: item.recipeImage }} style={styles.cardThumb} />}
-                <View style={styles.cardInfo}>
-                  <Text style={styles.cardTitle} numberOfLines={2}>{item.recipeTitle}</Text>
-                  <Text style={styles.cardMeta}>
-                    Saved {new Date(item.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </Text>
-                  {item.cooked && (
-                    <View style={styles.cookedTag}>
-                      <Text style={styles.cookedTagText}>Cooked {item.cookedAt ? new Date(item.cookedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</Text>
-                    </View>
-                  )}
-                </View>
-              </TouchableOpacity>
-            )}
-            ListEmptyComponent={
-              <View style={styles.empty}>
-                <Text style={styles.emptyTitle}>No saved recipes yet</Text>
-                <Text style={styles.emptySubtitle}>Heart recipes you want to try</Text>
               </View>
-            }
-          />
-        </>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <Text style={styles.emptyTitle}>No saved recipes yet</Text>
+              <Text style={styles.emptySubtitle}>Tap the heart on any recipe to save it</Text>
+            </View>
+          }
+        />
       )}
 
       {activeTab === 'adaptations' && (
         <FlatList
           data={savedAdaptations}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.card}>
               {item.recipeImage && <Image source={{ uri: item.recipeImage }} style={styles.cardThumb} />}
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle} numberOfLines={2}>{item.recipeTitle}</Text>
-                <Text style={styles.cardMeta}>Adapted · {new Date(item.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</Text>
+                <Text style={styles.cardMeta}>
+                  Adapted · {new Date(item.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </Text>
               </View>
             </TouchableOpacity>
           )}
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>No adaptations saved</Text>
-              <Text style={styles.emptySubtitle}>When you adapt a recipe, save it here</Text>
+              <Text style={styles.emptySubtitle}>When you "Make it with what I have", save the result here</Text>
             </View>
           }
         />
@@ -115,25 +118,18 @@ export default function SavedScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream, paddingTop: 56 },
-  segmented: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: colors.creamDeep, borderRadius: radius.pill, padding: 3, marginBottom: 12 },
-  segOption: { flex: 1, alignItems: 'center', paddingVertical: 8, borderRadius: radius.pill },
+  segmented: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: colors.creamDeep, borderRadius: radius.pill, padding: 3, marginBottom: 12, marginTop: 12 },
+  segOption: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: radius.pill },
   segOptionActive: { backgroundColor: colors.paper },
-  segText: { fontFamily: 'Inter', fontSize: 12, fontWeight: '600', color: colors.inkHint },
-  segTextActive: { color: colors.tc700 },
-  filterRow: { flexDirection: 'row', gap: 8, paddingHorizontal: 20, marginBottom: 12 },
-  filterChip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.pill, backgroundColor: colors.paper, borderWidth: 1, borderColor: colors.hairline },
-  filterChipActive: { backgroundColor: colors.ink, borderColor: colors.ink },
-  filterChipText: { fontFamily: 'Inter', fontSize: 11, fontWeight: '500', color: colors.inkSoft },
-  filterChipTextActive: { color: colors.cream },
+  segText: { fontFamily: 'Inter', fontSize: 13, fontWeight: '500', color: colors.inkHint },
+  segTextActive: { color: colors.tc700, fontWeight: '600' },
   list: { paddingHorizontal: 20, paddingBottom: 48 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, backgroundColor: colors.paper, borderRadius: radius.md, borderWidth: 1, borderColor: colors.hairline, marginBottom: 8 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, backgroundColor: colors.paper, borderRadius: radius.md, borderWidth: 1, borderColor: colors.hairline, marginBottom: 8 },
   cardThumb: { width: 54, height: 54, borderRadius: 10 },
   cardInfo: { flex: 1, minWidth: 0 },
-  cardTitle: { fontFamily: 'Fraunces', fontSize: 14, fontWeight: '500', color: colors.ink, marginBottom: 3 },
-  cardMeta: { fontFamily: 'Inter', fontSize: 11, color: colors.inkHint },
-  cookedTag: { backgroundColor: colors.sage100, paddingHorizontal: 7, paddingVertical: 2, borderRadius: radius.pill, alignSelf: 'flex-start', marginTop: 3 },
-  cookedTagText: { fontFamily: 'Inter', fontSize: 10, fontWeight: '600', color: colors.sage700, letterSpacing: 0.2 },
-  empty: { alignItems: 'center', paddingTop: 80 },
+  cardTitle: { fontFamily: 'Fraunces', fontSize: 15, fontWeight: '500', color: colors.ink, marginBottom: 3 },
+  cardMeta: { fontFamily: 'Inter', fontSize: 12, color: colors.inkHint },
+  empty: { alignItems: 'center', paddingTop: 80, paddingHorizontal: 32 },
   emptyTitle: { ...typography.h3, color: colors.ink, marginBottom: spacing.sm },
   emptySubtitle: { ...typography.body, color: colors.inkSoft, textAlign: 'center' },
 });

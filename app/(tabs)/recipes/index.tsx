@@ -2,6 +2,7 @@ import { API_BASE } from '@/lib/api';
 import { View, Text, FlatList, TouchableOpacity, TextInput, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '@clerk/clerk-expo';
 import { Search, X, Sparkles, SlidersHorizontal } from 'lucide-react-native';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import AccentHeader from '@/components/AccentHeader';
@@ -40,6 +41,7 @@ const DIET_FILTERS = [
 
 export default function RecipesScreen() {
   const router = useRouter();
+  const { getToken, isSignedIn } = useAuth();
   const [cuisine, setCuisine] = useState('');
   const [maxTime, setMaxTime] = useState(0);
   const [difficulty, setDifficulty] = useState('');
@@ -52,7 +54,49 @@ export default function RecipesScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiSearching, setAiSearching] = useState(false);
   const [aiResults, setAiResults] = useState<any[] | null>(null);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    (async () => {
+      try {
+        const token = await getToken();
+        const resp = await fetch(`${API_BASE}/api/me/recipes/saved`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await resp.json();
+        setSavedIds(new Set((data.saved || []).map((s: any) => String(s.recipeId))));
+      } catch {}
+    })();
+  }, [isSignedIn]);
+
+  async function toggleSave(recipe: any) {
+    if (!isSignedIn) return;
+    const id = String(recipe.objectID || recipe.id);
+    const isSaved = savedIds.has(id);
+    setSavedIds(prev => {
+      const next = new Set(prev);
+      if (isSaved) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+    try {
+      const token = await getToken();
+      if (isSaved) {
+        await fetch(`${API_BASE}/api/me/recipes/saved?recipeId=${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        await fetch(`${API_BASE}/api/me/recipes/saved`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ recipeId: id, title: recipe.title, image: recipe.image_url }),
+        });
+      }
+    } catch (e) { console.error('Toggle save failed:', e); }
+  }
 
   const activeFilterCount = [cuisine, maxTime, difficulty, diet].filter(v => v).length;
 
@@ -213,6 +257,8 @@ export default function RecipesScreen() {
               total_time_minutes: item.total_time_minutes,
               difficulty: item.difficulty,
             }}
+            isSaved={savedIds.has(String(item.objectID || item.id))}
+            onHeart={() => toggleSave(item)}
             onTap={() => router.push({ pathname: '/(tabs)/recipes/[id]', params: { id: String(item.objectID || item.id), recipe: JSON.stringify(item) } })}
           />
         )}

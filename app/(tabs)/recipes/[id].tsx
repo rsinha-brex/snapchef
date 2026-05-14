@@ -101,6 +101,50 @@ export default function RecipeDetailScreen() {
     }
   }
 
+  async function handleSaveAdapted() {
+    if (!isSignedIn || !adaptResult || saving) return;
+    setSaving(true);
+    try {
+      const token = await getToken();
+      const resp = await fetch(`${API_BASE}/api/me/adaptations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          recipeId: parseInt(id) || Date.now(),
+          recipeTitle: title,
+          recipeImage: imageUrl,
+          adaptedPayload: adaptResult,
+        }),
+      });
+      if (resp.ok) setSaved(true);
+    } catch (e) { console.error('Save adapted failed:', e); }
+    finally { setSaving(false); }
+  }
+
+  async function handleToggleSaveOriginal() {
+    if (!isSignedIn || saving) return;
+    setSaving(true);
+    try {
+      const token = await getToken();
+      const recipeId = parseInt(id) || Date.now();
+      if (saved) {
+        await fetch(`${API_BASE}/api/me/recipes/saved?recipeId=${recipeId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSaved(false);
+      } else {
+        await fetch(`${API_BASE}/api/me/recipes/saved`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ recipeId, title, image: imageUrl }),
+        });
+        setSaved(true);
+      }
+    } catch (e) { console.error('Toggle save failed:', e); }
+    finally { setSaving(false); }
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -259,8 +303,8 @@ export default function RecipeDetailScreen() {
           <TouchableOpacity style={styles.toggleBtn} onPress={() => setViewMode('original')}>
             <Text style={styles.toggleBtnText}>View original</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.saveAdaptBtn}>
-            <Text style={styles.saveAdaptBtnText}>Save this version</Text>
+          <TouchableOpacity style={[styles.saveAdaptBtn, saved && styles.saveAdaptBtnSaved]} onPress={handleSaveAdapted} disabled={saving || saved}>
+            <Text style={styles.saveAdaptBtnText}>{saved ? 'Saved ✓' : saving ? 'Saving…' : 'Save this version'}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -338,5 +382,6 @@ const styles = StyleSheet.create({
   toggleBtn: { flex: 1, backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center' },
   toggleBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
   saveAdaptBtn: { flex: 1, backgroundColor: colors.tc600, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center' },
+  saveAdaptBtnSaved: { backgroundColor: colors.sage500 },
   saveAdaptBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
 });
