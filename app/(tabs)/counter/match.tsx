@@ -13,9 +13,11 @@ export default function MatchScreen() {
   const { items } = useCounterStore();
   const [allMatches, setAllMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [exactOnly, setExactOnly] = useState(false);
-  const [page, setPage] = useState(0);
-  const PAGE_SIZE = 5;
+  const [visible, setVisible] = useState(5);
+  const [seen, setSeen] = useState<string[]>([]);
+  const BATCH = 5;
 
   useEffect(() => {
     fetchMatches();
@@ -25,22 +27,35 @@ export default function MatchScreen() {
     setLoading(true);
     try {
       const ingredients = items.map(i => i.name).join(',');
-      const response = await fetch(`${API_BASE}/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20`);
+      const seenParam = seen.length > 0 ? `&seen=${seen.join(',')}` : '';
+      const response = await fetch(`${API_BASE}/api/recipes/match-pantry?ingredients=${encodeURIComponent(ingredients)}&limit=20${seenParam}`);
       const data = await response.json();
-      setAllMatches(data.recipes || []);
+      const newRecipes = data.recipes || [];
+      setAllMatches(prev => [...prev, ...newRecipes]);
+      setSeen(prev => [...prev, ...newRecipes.map((r: any) => String(r.objectID || r.id))]);
     } catch (error) {
       console.error('Match failed:', error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  }
+
+  async function handleShowMore() {
+    const nextVisible = visible + BATCH;
+    if (nextVisible > allMatches.length) {
+      setLoadingMore(true);
+      await fetchMatches();
+    }
+    setVisible(nextVisible);
   }
 
   const filtered = exactOnly
     ? allMatches.filter(r => r.missedCount <= 2)
     : allMatches;
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const displayMatches = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const displayMatches = filtered.slice(0, visible);
+  const hasMore = visible < filtered.length || !loading;
 
   if (loading) {
     return (
@@ -70,13 +85,13 @@ export default function MatchScreen() {
       <View style={styles.toggleRow}>
         <TouchableOpacity
           style={[styles.toggleBtn, !exactOnly && styles.toggleBtnActive]}
-          onPress={() => { setExactOnly(false); setPage(0); }}
+          onPress={() => { setExactOnly(false); setVisible(5); }}
         >
           <Text style={[styles.toggleText, !exactOnly && styles.toggleTextActive]}>Best matches</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.toggleBtn, exactOnly && styles.toggleBtnActive]}
-          onPress={() => { setExactOnly(true); setPage(0); }}
+          onPress={() => { setExactOnly(true); setVisible(5); }}
         >
           <Text style={[styles.toggleText, exactOnly && styles.toggleTextActive]}>Can make now</Text>
         </TouchableOpacity>
@@ -96,6 +111,15 @@ export default function MatchScreen() {
         data={displayMatches}
         keyExtractor={(item) => String(item.objectID || item.id)}
         contentContainerStyle={styles.list}
+        ListFooterComponent={
+          displayMatches.length > 0 ? (
+            <TouchableOpacity style={styles.showMoreBtn} onPress={handleShowMore} disabled={loadingMore}>
+              <Text style={styles.showMoreText}>
+                {loadingMore ? 'Loading…' : `Show more (${displayMatches.length} shown)`}
+              </Text>
+            </TouchableOpacity>
+          ) : null
+        }
         renderItem={({ item }) => (
           <RecipeCard
             recipe={{
@@ -113,26 +137,6 @@ export default function MatchScreen() {
           />
         )}
       />
-
-      {totalPages > 1 && (
-        <View style={styles.pagination}>
-          <TouchableOpacity
-            style={[styles.pageBtn, page === 0 && styles.pageBtnDisabled]}
-            onPress={() => setPage(p => Math.max(0, p - 1))}
-            disabled={page === 0}
-          >
-            <Text style={[styles.pageBtnText, page === 0 && styles.pageBtnTextDisabled]}>← Previous</Text>
-          </TouchableOpacity>
-          <Text style={styles.pageIndicator}>{page + 1} / {totalPages}</Text>
-          <TouchableOpacity
-            style={[styles.pageBtn, page >= totalPages - 1 && styles.pageBtnDisabled]}
-            onPress={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
-          >
-            <Text style={[styles.pageBtnText, page >= totalPages - 1 && styles.pageBtnTextDisabled]}>Next →</Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 }
@@ -153,13 +157,9 @@ const styles = StyleSheet.create({
   toggleTextActive: { color: colors.tc700, fontWeight: '600' },
   noExact: { padding: spacing.xl, alignItems: 'center' },
   noExactText: { ...typography.body, color: colors.inkSoft, textAlign: 'center', lineHeight: 20 },
-  list: { paddingHorizontal: spacing.lg, paddingBottom: 100 },
-  pagination: { position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: spacing.lg, paddingBottom: 44, backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.hairline },
-  pageBtn: { paddingVertical: 10, paddingHorizontal: 16 },
-  pageBtnDisabled: { opacity: 0.3 },
-  pageBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.tc600 },
-  pageBtnTextDisabled: { color: colors.inkMute },
-  pageIndicator: { fontFamily: 'Inter', fontSize: 13, color: colors.inkHint },
+  list: { paddingHorizontal: spacing.lg, paddingBottom: 48 },
+  showMoreBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 14, alignItems: 'center', marginTop: spacing.md, marginBottom: spacing.xl },
+  showMoreText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
   exhausted: { flex: 1, backgroundColor: colors.cream, paddingTop: 56 },
   exhaustedContent: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xxl },
   exhaustedIcon: { width: 88, height: 88, borderRadius: 44, backgroundColor: colors.creamDeep, alignItems: 'center', justifyContent: 'center', marginBottom: 18 },

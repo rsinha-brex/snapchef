@@ -1,12 +1,10 @@
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { useSignIn, useSSO, useClerk } from '@clerk/clerk-expo';
+import { useSignIn, useClerk } from '@clerk/clerk-expo';
 import { colors, type as typography, spacing, radius } from '@/constants/theme';
 import { useState } from 'react';
-import * as Linking from 'expo-linking';
 
 export default function SignInScreen() {
-  const { signIn, setActive } = useSignIn();
-  const { startSSOFlow } = useSSO();
+  const { signIn } = useSignIn();
   const clerk = useClerk();
   const [loading, setLoading] = useState(false);
 
@@ -14,23 +12,9 @@ export default function SignInScreen() {
     if (!signIn) return;
     setLoading(true);
     try {
-      if (Platform.OS === 'web') {
-        clerk.redirectToSignIn({ redirectUrl: window.location.origin + '/' });
-        return;
-      }
-
-      const redirectUrl = Linking.createURL('/sso-callback');
-      const { createdSessionId, setActive: setActiveSession } = await startSSOFlow({
-        strategy: 'oauth_google',
-        redirectUrl,
-      });
-
-      if (createdSessionId && setActiveSession) {
-        await setActiveSession({ session: createdSessionId });
-      }
+      clerk.redirectToSignIn({ redirectUrl: Platform.OS === 'web' ? window.location.origin + '/' : 'https://drnohan-snapchef.expo.app/' });
     } catch (error) {
       console.error('Google sign-in error:', error);
-    } finally {
       setLoading(false);
     }
   }
