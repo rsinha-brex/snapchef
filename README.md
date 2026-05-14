@@ -1,56 +1,119 @@
-# Welcome to your Expo app 👋
+# snapchef
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Smart Recipe Planner — snap ingredients, get personalized recipes with AI-powered matching and adaptation.
 
-## Get started
+## Live Demo
 
-1. Install dependencies
+- **Web**: https://drnohan-snapchef.expo.app
+- **Mobile (Expo Go)**: Install [Expo Go](https://expo.dev/go), then open https://expo.dev/accounts/drnohan/projects/snapchef?channel=production
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Photo ingredient detection** — Take a photo of ingredients, Claude Vision identifies them
+- **Ingredient normalization** — Detected items matched to Algolia's recipe vocabulary with alternatives picker
+- **Recipe matching** — Find recipes using your ingredients (1M recipe database)
+- **"Can make now" filter** — Only show recipes you have all ingredients for
+- **LLM recipe adaptation** — "Make it with what I have" substitutes missing ingredients
+- **AI-powered search** — Natural language queries ("quick weeknight pasta")
+- **Pantry management** — Persistent ingredient inventory (Clerk auth + Supabase)
+- **Multi-platform** — Works on web, iOS, and Android via Expo
 
-   ```bash
-   npx expo start
-   ```
+## Running Locally
 
-In the output, you'll find options to open the app in a
+### Prerequisites
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Node.js 20+** (we use 24.x, but 20+ works)
+- **npm** (comes with Node)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Setup
 
 ```bash
-npm run reset-project
+# Clone
+git clone https://github.com/rsinha-brex/snapchef.git
+cd snapchef
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Fill in your own service credentials (see below)
+
+# Start the dev server
+npx expo start --web --port 8081
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Then open http://localhost:8081 in your browser.
 
-### Other setup steps
+### Environment Variables
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Copy `.env.example` to `.env` and fill in:
 
-## Learn more
+| Variable | Source | Required |
+|----------|--------|----------|
+| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | [Clerk](https://clerk.com) → API Keys | Yes |
+| `CLERK_SECRET_KEY` | Clerk → API Keys | Yes |
+| `ALGOLIA_APP_ID` | [Algolia](https://algolia.com) → API Keys | Yes |
+| `ALGOLIA_SEARCH_API_KEY` | Algolia → API Keys | Yes |
+| `SUPABASE_URL` | [Supabase](https://supabase.com) → Settings → API | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API | Yes |
+| `DATABASE_URL` | Supabase → Settings → Database → Connection string (pooler) | Yes |
+| `DIRECT_URL` | Supabase → Settings → Database → Connection string (direct) | Yes |
+| `OPENROUTER_API_KEY` | [OpenRouter](https://openrouter.ai) → API Keys | Yes |
 
-To learn more about developing your project with Expo, look at the following resources:
+### Running on Mobile (Expo Go)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start
+```
 
-## Join the community
+Scan the QR code with Expo Go (iOS/Android). Requires SDK 54 compatible Expo Go.
 
-Join our community of developers creating universal apps.
+## Tech Stack
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Framework**: Expo SDK 54 + Expo Router 6
+- **UI**: React Native (cross-platform)
+- **Auth**: Clerk
+- **Database**: Supabase (PostgreSQL)
+- **Recipe Search**: Algolia (1M recipes indexed)
+- **AI/LLM**: Claude via OpenRouter (vision detection, recipe adaptation, AI search)
+- **State**: Zustand (ephemeral counter store)
+
+## Architecture
+
+```
+app/
+  (auth)/          — Sign-in screen
+  (tabs)/
+    recipes/       — Browse, filter, AI search, detail + adaptation
+    counter/       — Photo detection, manual add, recipe matching
+    pantry/        — Persistent ingredient inventory
+    saved/         — Saved recipes & adaptations
+  api/             — Server-side API routes (Expo Router)
+    recipes/       — search, match-pantry, adapt, ai-search
+    vision/        — Claude Vision ingredient detection
+    ingredients/   — normalize, autocomplete
+    me/            — User pantry CRUD (authenticated)
+
+lib/               — Algolia, Supabase, Anthropic clients
+stores/            — Zustand counter store
+components/        — Shared UI (RecipeCard, ManualAddSheet, etc.)
+scripts/           — Test suite (300 browser tests)
+```
+
+## Recipe Data
+
+1M recipes from [RecipeNLG](https://recipenlg.cs.put.poznan.pl/) (open-source), enriched with:
+- Heuristic labels (cook time, dietary tags, protein type)
+- LLM-generated labels (cuisine, meal type, difficulty)
+- Indexed in Algolia with searchable attributes + facets
+
+## Testing
+
+```bash
+# Run 300 production stress tests (requires GTM browser on :9223)
+node scripts/browser-tests/run-production.mjs
+
+# Run specific category
+node scripts/browser-tests/run-production.mjs --cat=7  # API only
+```
