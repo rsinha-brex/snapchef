@@ -17,7 +17,7 @@ export default function SignInScreen() {
     try {
       const { createdSessionId } = await startSSOFlow({
         strategy: 'oauth_google',
-        redirectUrl: 'mise://oauth-callback',
+        redirectUrl: 'snapchef://oauth-callback',
       });
       if (createdSessionId) {
         await setActive!({ session: createdSessionId });
@@ -32,7 +32,7 @@ export default function SignInScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <Text style={styles.wordmark}>mise</Text>
+        <Text style={styles.wordmark}>snapchef</Text>
         <Text style={styles.headline}>A little kitchen,</Text>
         <Text style={styles.headlineAccent}>curated for you</Text>
         <Text style={styles.subline}>
