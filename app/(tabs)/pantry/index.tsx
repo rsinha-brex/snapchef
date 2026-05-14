@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   primaryBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.cream },
   secondaryBtn: { backgroundColor: colors.creamDeep, borderRadius: radius.pill, paddingVertical: 16, alignItems: 'center' },
   secondaryBtnText: { fontFamily: 'Inter', fontSize: 14, fontWeight: '600', color: colors.inkSoft },
-  list: { paddingHorizontal: spacing.lg, paddingBottom: 100 },
+  list: { paddingHorizontal: spacing.lg, paddingBottom: 160 },
   categorySection: { marginBottom: 18 },
   catHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   catLabel: { fontFamily: 'Inter', fontSize: 11, fontWeight: '600', letterSpacing: 1.3, textTransform: 'uppercase', color: colors.inkHint },
