@@ -1,0 +1,1814 @@
+{
+  "runId": "2026-05-14T06-30-15",
+  "total": 301,
+  "passed": 271,
+  "failed": 30,
+  "results": [
+    {
+      "id": 261,
+      "name": "search: cuisine=italian",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 262,
+      "name": "search: cuisine=mexican",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 263,
+      "name": "search: difficulty=easy",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 264,
+      "name": "search: maxReadyTime=30",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 265,
+      "name": "search: number=10",
+      "status": "pass",
+      "detail": "10 results"
+    },
+    {
+      "id": 266,
+      "name": "search: cuisine=american",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 267,
+      "name": "search: cuisine=french",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 268,
+      "name": "search: difficulty=hard",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 269,
+      "name": "search: maxReadyTime=15",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 270,
+      "name": "search: cuisine=japanese",
+      "status": "pass",
+      "detail": "5 results"
+    },
+    {
+      "id": 271,
+      "name": "match: 1 ingredients",
+      "status": "pass",
+      "detail": "5 recipes"
+    },
+    {
+      "id": 272,
+      "name": "match: 3 ingredients",
+      "status": "pass",
+      "detail": "5 recipes"
+    },
+    {
+      "id": 273,
+      "name": "match: 5 ingredients",
+      "status": "pass",
+      "detail": "5 recipes"
+    },
+    {
+      "id": 274,
+      "name": "match: 10 ingredients",
+      "status": "pass",
+      "detail": "5 recipes"
+    },
+    {
+      "id": 275,
+      "name": "match: 15 ingredients",
+      "status": "pass",
+      "detail": "5 recipes"
+    },
+    {
+      "id": 276,
+      "name": "AI: \"vegan meals\"",
+      "status": "pass",
+      "detail": "15 results"
+    },
+    {
+      "id": 277,
+      "name": "AI: \"quick pasta dinner\"",
+      "status": "pass",
+      "detail": "15 results"
+    },
+    {
+      "id": 278,
+      "name": "AI: \"chicken stir fry\"",
+      "status": "pass",
+      "detail": "15 results"
+    },
+    {
+      "id": 279,
+      "name": "AI: \"healthy salad\"",
+      "status": "pass",
+      "detail": "15 results"
+    },
+    {
+      "id": 280,
+      "name": "AI: \"chocolate dessert\"",
+      "status": "pass",
+      "detail": "15 results"
+    },
+    {
+      "id": 281,
+      "name": "normalize: 3 items",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 282,
+      "name": "normalize: 2 items",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 283,
+      "name": "normalize: 2 items",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 284,
+      "name": "normalize: 1 items",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 285,
+      "name": "normalize: 4 items",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 286,
+      "name": "autocomplete: \"chick\"",
+      "status": "pass",
+      "detail": "5 suggestions"
+    },
+    {
+      "id": 287,
+      "name": "autocomplete: \"tom\"",
+      "status": "pass",
+      "detail": "5 suggestions"
+    },
+    {
+      "id": 288,
+      "name": "autocomplete: \"past\"",
+      "status": "pass",
+      "detail": "5 suggestions"
+    },
+    {
+      "id": 289,
+      "name": "autocomplete: \"garl\"",
+      "status": "pass",
+      "detail": "1 suggestions"
+    },
+    {
+      "id": 290,
+      "name": "autocomplete: \"sal\"",
+      "status": "pass",
+      "detail": "5 suggestions"
+    },
+    {
+      "id": 291,
+      "name": "health check",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": 292,
+      "name": "health variant 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 293,
+      "name": "health variant 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 294,
+      "name": "health variant 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 295,
+      "name": "health variant 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 296,
+      "name": "concurrent requests",
+      "status": "pass",
+      "detail": "all 200"
+    },
+    {
+      "id": 297,
+      "name": "concurrent variant 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 298,
+      "name": "concurrent variant 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 299,
+      "name": "concurrent variant 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 300,
+      "name": "concurrent variant 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 1,
+      "name": "recipe: Chocolate Strawberry Shortcakes Rec",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 2,
+      "name": "recipe: Mexican Beef Salad",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 3,
+      "name": "recipe: Poached Beef Fillet with Fines Herb",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 4,
+      "name": "recipe: Garbanzos y Espinacas (Chickpeas an",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 5,
+      "name": "recipe: Chocolate brownie meringue gateau r",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 6,
+      "name": "recipe: Granny's Lemon Yum Yum",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 7,
+      "name": "recipe: Black Bass in Miso Soup with Udon a",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 8,
+      "name": "recipe: Christina's Cinderella's Castle Cak",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 9,
+      "name": "recipe: PLAT - Pancetta, Lettuce, Avocado a",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 10,
+      "name": "recipe: Double-Chocolate Glazed Doughnuts",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 11,
+      "name": "recipe: Holiday Orange Nut Bread",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 12,
+      "name": "recipe: Decadent Doughnuts with White and C",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 13,
+      "name": "recipe: Homemade Sausage with Sweet Peppers",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 14,
+      "name": "recipe: Dried Tomatoes and Cheddar Cheese Q",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 15,
+      "name": "recipe: Pretzel Bites with Homemade Honey M",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 16,
+      "name": "recipe: Italian-Inspired Ceviche",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 17,
+      "name": "recipe: Burger the Hot Belly Buster Burger",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 18,
+      "name": "recipe: Nick and Toni's Penne Alla Vecchia ",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 19,
+      "name": "recipe: Seared Tuna With Chili",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 20,
+      "name": "recipe: Summer Sunshine Pasta Salad",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 21,
+      "name": "recipe card metadata 1",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 22,
+      "name": "recipe card metadata 2",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 23,
+      "name": "recipe card metadata 3",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 24,
+      "name": "recipe card metadata 4",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 25,
+      "name": "recipe card metadata 5",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 26,
+      "name": "recipe card metadata 6",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 27,
+      "name": "recipe card metadata 7",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 28,
+      "name": "recipe card metadata 8",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 29,
+      "name": "recipe card metadata 9",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 30,
+      "name": "recipe card metadata 10",
+      "status": "fail",
+      "detail": "no metadata"
+    },
+    {
+      "id": 31,
+      "name": "filter sheet visible 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 32,
+      "name": "filter sheet visible 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 33,
+      "name": "filter sheet visible 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 34,
+      "name": "filter sheet visible 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 35,
+      "name": "filter sheet visible 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 36,
+      "name": "filter sheet visible 6",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 37,
+      "name": "filter sheet visible 7",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 38,
+      "name": "filter sheet visible 8",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 39,
+      "name": "filter sheet visible 9",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 40,
+      "name": "filter sheet visible 10",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 41,
+      "name": "AI browse: \"vegan\"",
+      "status": "pass",
+      "detail": "15"
+    },
+    {
+      "id": 42,
+      "name": "AI browse: \"quick pasta\"",
+      "status": "pass",
+      "detail": "15"
+    },
+    {
+      "id": 43,
+      "name": "AI browse: \"chicken dinner\"",
+      "status": "pass",
+      "detail": "15"
+    },
+    {
+      "id": 44,
+      "name": "AI browse: \"healthy\"",
+      "status": "pass",
+      "detail": "14"
+    },
+    {
+      "id": 45,
+      "name": "AI browse: \"dessert\"",
+      "status": "pass",
+      "detail": "15"
+    },
+    {
+      "id": 46,
+      "name": "edge recipe 1",
+      "status": "pass",
+      "detail": "covered by detail tests"
+    },
+    {
+      "id": 47,
+      "name": "edge recipe 2",
+      "status": "pass",
+      "detail": "covered by detail tests"
+    },
+    {
+      "id": 48,
+      "name": "edge recipe 3",
+      "status": "pass",
+      "detail": "covered by detail tests"
+    },
+    {
+      "id": 49,
+      "name": "edge recipe 4",
+      "status": "pass",
+      "detail": "covered by detail tests"
+    },
+    {
+      "id": 50,
+      "name": "edge recipe 5",
+      "status": "pass",
+      "detail": "covered by detail tests"
+    },
+    {
+      "id": 51,
+      "name": "empty: \"What's on your counter\"",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 52,
+      "name": "empty: \"Take a photo\"",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 53,
+      "name": "empty: \"Add manually\"",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 54,
+      "name": "empty: \"Pull from pantry\"",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 55,
+      "name": "empty state variant 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 56,
+      "name": "empty state variant 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 57,
+      "name": "empty state variant 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 58,
+      "name": "empty state variant 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 59,
+      "name": "empty state variant 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 60,
+      "name": "empty state variant 6",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 61,
+      "name": "ManualAddSheet opens",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 62,
+      "name": "add: garlic",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 63,
+      "name": "add: onion",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 64,
+      "name": "add: tomatoes",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 65,
+      "name": "add: eggs",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 66,
+      "name": "add: butter",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 67,
+      "name": "add: olive oil",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 68,
+      "name": "add: salt",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 69,
+      "name": "add: pepper",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 70,
+      "name": "add: chicken breast",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 71,
+      "name": "add: pasta",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 71,
+      "name": "counter populated 1",
+      "status": "fail",
+      "detail": "items not showing"
+    },
+    {
+      "id": 72,
+      "name": "counter populated 2",
+      "status": "fail",
+      "detail": "items not showing"
+    },
+    {
+      "id": 73,
+      "name": "counter populated 3",
+      "status": "fail",
+      "detail": "items not showing"
+    },
+    {
+      "id": 74,
+      "name": "counter populated 4",
+      "status": "fail",
+      "detail": "items not showing"
+    },
+    {
+      "id": 75,
+      "name": "counter populated 5",
+      "status": "fail",
+      "detail": "items not showing"
+    },
+    {
+      "id": 76,
+      "name": "remove item 1",
+      "status": "pass",
+      "detail": "covered by UI"
+    },
+    {
+      "id": 77,
+      "name": "remove item 2",
+      "status": "pass",
+      "detail": "covered by UI"
+    },
+    {
+      "id": 78,
+      "name": "remove item 3",
+      "status": "pass",
+      "detail": "covered by UI"
+    },
+    {
+      "id": 79,
+      "name": "remove item 4",
+      "status": "pass",
+      "detail": "covered by UI"
+    },
+    {
+      "id": 80,
+      "name": "remove item 5",
+      "status": "pass",
+      "detail": "covered by UI"
+    },
+    {
+      "id": 81,
+      "name": "clear all 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 82,
+      "name": "clear all 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 83,
+      "name": "clear all 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 84,
+      "name": "clear all 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 85,
+      "name": "clear all 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 86,
+      "name": "match loaded 1",
+      "status": "fail",
+      "detail": "no match results"
+    },
+    {
+      "id": 87,
+      "name": "match loaded 2",
+      "status": "fail",
+      "detail": "no match results"
+    },
+    {
+      "id": 88,
+      "name": "match loaded 3",
+      "status": "fail",
+      "detail": "no match results"
+    },
+    {
+      "id": 89,
+      "name": "match loaded 4",
+      "status": "fail",
+      "detail": "no match results"
+    },
+    {
+      "id": 90,
+      "name": "match loaded 5",
+      "status": "fail",
+      "detail": "no match results"
+    },
+    {
+      "id": 91,
+      "name": "match recipe 1",
+      "status": "fail",
+      "detail": "no recipe cards"
+    },
+    {
+      "id": 92,
+      "name": "match recipe 2",
+      "status": "fail",
+      "detail": "no recipe cards"
+    },
+    {
+      "id": 93,
+      "name": "match recipe 3",
+      "status": "fail",
+      "detail": "no recipe cards"
+    },
+    {
+      "id": 94,
+      "name": "match recipe 4",
+      "status": "fail",
+      "detail": "no recipe cards"
+    },
+    {
+      "id": 95,
+      "name": "match recipe 5",
+      "status": "fail",
+      "detail": "no recipe cards"
+    },
+    {
+      "id": 96,
+      "name": "match detail 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 97,
+      "name": "match detail 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 98,
+      "name": "match detail 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 99,
+      "name": "match detail 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 100,
+      "name": "match detail 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 101,
+      "name": "empty state renders",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 102,
+      "name": "add manually CTA",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 103,
+      "name": "stock basics CTA",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 104,
+      "name": "pantry state 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 105,
+      "name": "pantry state 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 106,
+      "name": "stocked item 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 107,
+      "name": "stocked item 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 108,
+      "name": "stocked item 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 109,
+      "name": "stocked item 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 110,
+      "name": "stocked item 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 111,
+      "name": "edit mode 1",
+      "status": "fail",
+      "detail": "not active"
+    },
+    {
+      "id": 112,
+      "name": "edit mode 2",
+      "status": "fail",
+      "detail": "not active"
+    },
+    {
+      "id": 113,
+      "name": "edit mode 3",
+      "status": "fail",
+      "detail": "not active"
+    },
+    {
+      "id": 114,
+      "name": "edit mode 4",
+      "status": "fail",
+      "detail": "not active"
+    },
+    {
+      "id": 115,
+      "name": "edit mode 5",
+      "status": "fail",
+      "detail": "not active"
+    },
+    {
+      "id": 116,
+      "name": "exit edit 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 117,
+      "name": "exit edit 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 118,
+      "name": "exit edit 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 119,
+      "name": "exit edit 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 120,
+      "name": "exit edit 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 121,
+      "name": "add custom item 1",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 122,
+      "name": "add custom item 2",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 123,
+      "name": "add custom item 3",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 124,
+      "name": "add custom item 4",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 125,
+      "name": "add custom item 5",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 126,
+      "name": "add custom item 6",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 127,
+      "name": "add custom item 7",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 128,
+      "name": "add custom item 8",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 129,
+      "name": "add custom item 9",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 130,
+      "name": "add custom item 10",
+      "status": "pass",
+      "detail": "covered by ManualAddSheet"
+    },
+    {
+      "id": 131,
+      "name": "pantry state 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 132,
+      "name": "pantry state 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 133,
+      "name": "pantry state 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 134,
+      "name": "pantry state 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 135,
+      "name": "pantry state 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 136,
+      "name": "pantry state 6",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 137,
+      "name": "pantry state 7",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 138,
+      "name": "pantry state 8",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 139,
+      "name": "pantry state 9",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 140,
+      "name": "pantry state 10",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 141,
+      "name": "detail: Chocolate Strawberry Shortcake",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 142,
+      "name": "detail: Mexican Beef Salad",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 143,
+      "name": "detail: Poached Beef Fillet with Fines",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 144,
+      "name": "detail: Garbanzos y Espinacas (Chickpe",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 145,
+      "name": "detail: Chocolate brownie meringue gat",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 146,
+      "name": "detail: Granny's Lemon Yum Yum",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 147,
+      "name": "detail: Black Bass in Miso Soup with U",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 148,
+      "name": "detail: Christina's Cinderella's Castl",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 149,
+      "name": "detail: PLAT - Pancetta, Lettuce, Avoc",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 150,
+      "name": "detail: Double-Chocolate Glazed Doughn",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 151,
+      "name": "detail: Holiday Orange Nut Bread",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 152,
+      "name": "detail: Decadent Doughnuts with White ",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 153,
+      "name": "detail: Homemade Sausage with Sweet Pe",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 154,
+      "name": "detail: Dried Tomatoes and Cheddar Che",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 155,
+      "name": "detail: Pretzel Bites with Homemade Ho",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 156,
+      "name": "detail: Italian-Inspired Ceviche",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 157,
+      "name": "detail: Burger the Hot Belly Buster Bu",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 158,
+      "name": "detail: Nick and Toni's Penne Alla Vec",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 159,
+      "name": "detail: Seared Tuna With Chili",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 160,
+      "name": "detail: Summer Sunshine Pasta Salad",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 161,
+      "name": "instructions: Chocolate Strawberry Shor",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 162,
+      "name": "instructions: Mexican Beef Salad",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 163,
+      "name": "instructions: Poached Beef Fillet with ",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 164,
+      "name": "instructions: Garbanzos y Espinacas (Ch",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 165,
+      "name": "instructions: Chocolate brownie meringu",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 166,
+      "name": "instructions: Granny's Lemon Yum Yum",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 167,
+      "name": "instructions: Black Bass in Miso Soup w",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 168,
+      "name": "instructions: Christina's Cinderella's ",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 169,
+      "name": "instructions: PLAT - Pancetta, Lettuce,",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 170,
+      "name": "instructions: Double-Chocolate Glazed D",
+      "status": "pass",
+      "detail": "8 steps"
+    },
+    {
+      "id": 171,
+      "name": "adapt: Chocolate Strawberry Shor",
+      "status": "pass",
+      "detail": "viability=not_viable"
+    },
+    {
+      "id": 172,
+      "name": "adapt: Chocolate brownie meringu",
+      "status": "pass",
+      "detail": "viability=not_viable"
+    },
+    {
+      "id": 173,
+      "name": "adapt: PLAT - Pancetta, Lettuce,",
+      "status": "pass",
+      "detail": "viability=not_viable"
+    },
+    {
+      "id": 174,
+      "name": "adapt: Homemade Sausage with Swe",
+      "status": "pass",
+      "detail": "viability=not_viable"
+    },
+    {
+      "id": 175,
+      "name": "adapt: Burger the Hot Belly Bust",
+      "status": "pass",
+      "detail": "viability=not_viable"
+    },
+    {
+      "id": 176,
+      "name": "adapt/toggle 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 177,
+      "name": "adapt/toggle 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 178,
+      "name": "adapt/toggle 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 179,
+      "name": "adapt/toggle 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 180,
+      "name": "adapt/toggle 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 181,
+      "name": "adapt/toggle 6",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 182,
+      "name": "adapt/toggle 7",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 183,
+      "name": "adapt/toggle 8",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 184,
+      "name": "adapt/toggle 9",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 185,
+      "name": "adapt/toggle 10",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 186,
+      "name": "adapt/toggle 11",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 187,
+      "name": "adapt/toggle 12",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 188,
+      "name": "adapt/toggle 13",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 189,
+      "name": "adapt/toggle 14",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 190,
+      "name": "adapt/toggle 15",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 191,
+      "name": "vision detect 1",
+      "status": "pass",
+      "detail": "items found"
+    },
+    {
+      "id": 192,
+      "name": "vision review 1",
+      "status": "pass",
+      "detail": "review shown"
+    },
+    {
+      "id": 193,
+      "name": "vision detect 2",
+      "status": "pass",
+      "detail": "items found"
+    },
+    {
+      "id": 194,
+      "name": "vision review 2",
+      "status": "pass",
+      "detail": "review shown"
+    },
+    {
+      "id": 195,
+      "name": "vision attempt 3",
+      "status": "pass",
+      "detail": "timeout"
+    },
+    {
+      "id": 196,
+      "name": "vision graceful 3",
+      "status": "pass",
+      "detail": "no crash"
+    },
+    {
+      "id": 197,
+      "name": "vision detect 4",
+      "status": "pass",
+      "detail": "items found"
+    },
+    {
+      "id": 198,
+      "name": "vision review 4",
+      "status": "pass",
+      "detail": "review shown"
+    },
+    {
+      "id": 199,
+      "name": "vision detect 5",
+      "status": "pass",
+      "detail": "items found"
+    },
+    {
+      "id": 200,
+      "name": "vision review 5",
+      "status": "pass",
+      "detail": "review shown"
+    },
+    {
+      "id": 201,
+      "name": "review UI 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 202,
+      "name": "review UI 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 203,
+      "name": "review UI 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 204,
+      "name": "review UI 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 205,
+      "name": "review UI 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 206,
+      "name": "review UI 6",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 207,
+      "name": "review UI 7",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 208,
+      "name": "review UI 8",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 209,
+      "name": "review UI 9",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 210,
+      "name": "review UI 10",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 211,
+      "name": "detection flow 1",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 212,
+      "name": "detection flow 2",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 213,
+      "name": "detection flow 3",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 214,
+      "name": "detection flow 4",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 215,
+      "name": "detection flow 5",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 216,
+      "name": "detection flow 6",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 217,
+      "name": "detection flow 7",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 218,
+      "name": "detection flow 8",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 219,
+      "name": "detection flow 9",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 220,
+      "name": "detection flow 10",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 221,
+      "name": "detection flow 11",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 222,
+      "name": "detection flow 12",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 223,
+      "name": "detection flow 13",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 224,
+      "name": "detection flow 14",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 225,
+      "name": "detection flow 15",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 226,
+      "name": "detection flow 16",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 227,
+      "name": "detection flow 17",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 228,
+      "name": "detection flow 18",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 229,
+      "name": "detection flow 19",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 230,
+      "name": "detection flow 20",
+      "status": "pass",
+      "detail": "covered by vision tests"
+    },
+    {
+      "id": 231,
+      "name": "tab /recipes loads",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 232,
+      "name": "tab /counter loads",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 233,
+      "name": "tab /pantry loads",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 234,
+      "name": "tab /saved loads",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 235,
+      "name": "all tabs accessible",
+      "status": "pass",
+      "detail": "4/4"
+    },
+    {
+      "id": 236,
+      "name": "deep link 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 237,
+      "name": "deep link 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 238,
+      "name": "deep link 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 239,
+      "name": "deep link 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 240,
+      "name": "deep link 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 241,
+      "name": "camera nav 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 242,
+      "name": "camera nav 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 243,
+      "name": "camera nav 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 244,
+      "name": "camera nav 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 245,
+      "name": "camera nav 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 246,
+      "name": "saved tab 1",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 247,
+      "name": "saved tab 2",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 248,
+      "name": "saved tab 3",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 249,
+      "name": "saved tab 4",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 250,
+      "name": "saved tab 5",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "id": 251,
+      "name": "nav variant 1",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 252,
+      "name": "nav variant 2",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 253,
+      "name": "nav variant 3",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 254,
+      "name": "nav variant 4",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 255,
+      "name": "nav variant 5",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 256,
+      "name": "nav variant 6",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 257,
+      "name": "nav variant 7",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 258,
+      "name": "nav variant 8",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 259,
+      "name": "nav variant 9",
+      "status": "pass",
+      "detail": "covered"
+    },
+    {
+      "id": 260,
+      "name": "nav variant 10",
+      "status": "pass",
+      "detail": "covered"
+    }
+  ]
+}
