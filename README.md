@@ -2,30 +2,17 @@
 
 Smart Recipe Planner — snap ingredients, get personalized recipes with AI-powered matching and adaptation.
 
-## Live Demo
-
-### Web
-https://drnohan-snapchef.expo.app
-
-### Mobile (Expo Go)
+## Get the app on your phone
 
 1. Download Expo Go:
    - [iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
    - [Android (Play Store)](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
-2. Open the app — three ways:
-
-   **a. Scan the QR code** (open this README on your laptop, scan with phone camera on iOS or Expo Go's "Scan QR" on Android):
+2. Scan the QR code below with your phone (iOS camera app or Expo Go's "Scan QR code" on Android):
 
    ![QR code for snapchef in Expo Go](./docs/expo-qr.png)
 
-   **b. Tap this link on your phone** (deep-links into Expo Go):
-   `exp://u.expo.dev/b30d54c4-fa64-450b-856a-ea3af39ef924?channel-name=production`
-
-   **c. Or open this in any browser** to see the QR + project page:
-   https://expo.dev/accounts/drnohan/projects/snapchef/updates/8d9aa2b4-1a83-4d68-be2e-e01d4cf27ebe
-
-   **d. Or search inside Expo Go** — open the app, tap Profile, search `@drnohan/snapchef`
+3. **Or search inside Expo Go** — open the app, tap the Profile tab, search `@drnohan/snapchef` and tap to open
 
 > First load takes ~10–15 seconds while the bundle downloads. After that it's instant.
 
